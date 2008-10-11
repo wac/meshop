@@ -1,0 +1,19 @@
+REF_SOURCE can be generif or gene2pubmed
+
+all-REF_SOURCE-gene-mesh.txt:	All gene to mesh term counts via REF_SOURCE,
+				following all terms to their root term
+				(gene_id, term or parent, refs)
+all-REF_SOURCE-gene-refs.txt:	Reference count for each gene (via REF_SOURCE)
+				(gene_id, total refs)
+all-REF_SOURCE-gene-mesh-p.txt:	All gene to mesh term counts via REF_SOURCE,
+				with p-values
+				(mesh_term, gene_id, refs for term and gene, 
+				total gene refs, total term refs, 
+				hypergeometric p-value)
+hum-REF_SOURCE-gene-mesh-p.txt:	Same as all-REF_SOURCE-gene-mesh-p.txt except
+				filtered to only include human genes
+
+hum-gene.txt:			List of all the human gene_ids
+mesh-disease.txt:		List of all terms in the MeSH Disease category
+all-mesh-refs.txt:		Reference count for each MeSH term
+				(mesh term, total refs)

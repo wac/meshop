@@ -1,0 +1,2 @@
+*.comesh.txt:	     Co-occurring mesh term pairs
+comesh-total.txt:    Totals for co-occurring mesh terms

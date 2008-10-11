@@ -1,0 +1,6 @@
+Extracted from the pubmed
+titles/:	     PMID Article title 
+mesh/:		     PMID MeSH term pairs
+chem/:	     	     PMID Chem compound pairs
+mesh_parent/:        PMID Mesh term pairs expanded to include all parents
+comesh/:	     Co-occurring mesh terms for the file

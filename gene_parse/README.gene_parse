@@ -1,0 +1,2 @@
+Parsing the gene files is more straightforward
+We will be using the flat-files provided by Entrez Gene and loading those directly (no need to parse the XML directly)

@@ -1,0 +1,56 @@
+# Make the output "templated" so that it can build connection versions
+# (gene2pubmed vs generif)
+
+direct_gd_predict: $(DIRECT_GD_PREFIX)/all-generif-gene-mesh-merge.txt
+
+direct_gd_predict_clean: 
+	rm -f $(DIRECT_GD_PREFIX)/all-generif-gene-mesh-merge.txt
+	rm -f $(DIRECT_GD_PREFIX)/all-generif-gene-mesh.txt 
+	rm -f $(DIRECT_GD_PREFIX)/all-generif-mesh-refs.txt 
+	rm -f $(DIRECT_GD_PREFIX)/all-generif-gene-refs.txt
+	rm -f $(DIRECT_GD_PREFIX)/all-generif-gene-ids.txt
+	rm -f $(DIRECT_GD_PREFIX)/all-mesh-terms.txt
+
+
+$(DIRECT_GD_PREFIX)/all-generif-gene-ids.txt:	$(GENE_PREFIX)/load_generif.txt
+	echo "SELECT DISTINCT gene_id FROM generif" | $(SQL_CMD) | tail -n +2 > $@.tmp
+	mv $@.tmp $@
+
+# Get around query size limitations by only grabbing individual mesh terms and genes
+$(DIRECT_GD_PREFIX)/all-generif-gene-mesh.txt:	\
+		$(PM_MESH_PARENT_PREFIX)/load-mesh-parent.txt \
+		$(GENE_PREFIX)/load_gene.txt \
+		$(GENE_PREFIX)/load_generif.txt
+#		$(DIRECT_GD_PREFIX)/all-generif-gene-ids.txt 
+	rm -f $@.tmp
+#	while read gene_id; do echo "SELECT gene.gene_id, locus, mesh_parent, COUNT(DISTINCT generif.pmid) AS pubmed_refs FROM gene,generif, pubmed_mesh_parent WHERE gene.gene_id=$$gene_id AND generif.pmid=pubmed_mesh_parent.pmid AND gene.gene_id=generif.gene_id GROUP BY gene.gene_id, mesh_parent;" | $(SQL_CMD) | tail -n +2 >> $@.tmp ; done < $(DIRECT_GD_PREFIX)/all-generif-gene-ids.txt
+#	while read gene_id; do echo "SELECT generif.gene_id, mesh_parent, generif.pmid FROM generif, pubmed_mesh_parent WHERE generif.gene_id=$$gene_id AND generif.pmid=pubmed_mesh_parent.pmid;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | sort | uniq | cut -d "|" -f 1,2 | uniq -c | sed -r 's/^[[:blank:]]*([[:digit:]]*)[[:blank:]]*([[:print:]]*)/\2\|\1/' >> $@.tmp ; done < $(DIRECT_GD_PREFIX)/all-generif-gene-ids.txt
+	echo "SELECT generif.gene_id, mesh_parent, generif.pmid FROM generif, pubmed_mesh_parent WHERE generif.pmid=pubmed_mesh_parent.pmid;" | mysql-dbrc wcdb | tail -n +2 | sed "y/\t/\|/" | sort | uniq | cut -d "|" -f 1,2 | uniq -c | sed -r 's/^[[:blank:]]*([[:digit:]]*)[[:blank:]]*([[:print:]]*)/\2\|\1/' > $@.tmp
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-generif-gene-refs.txt:	\
+		$(DIRECT_GD_PREFIX)/all-generif-gene-ids.txt \
+		$(GENE_PREFIX)/load_generif.txt
+	rm -f $@.tmp
+	while read gene_id; do echo "SELECT gene_id, COUNT(pmid) FROM generif WHERE gene_id=$$gene_id" | $(SQL_CMD) | tail -n +2 >> $@.tmp ; done < $(DIRECT_GD_PREFIX)/all-generif-gene-ids.txt | $(SQL_CMD) | tail -n +2 >> $@.tmp
+	sort $@.tmp > $@ ; rm $@.tmp
+
+$(DIRECT_GD_PREFIX)/all-mesh-terms.txt:	$(MESH_PREFIX)/load-mesh-ids.txt
+	echo "SELECT DISTINCT term FROM mesh" | $(SQL_CMD) | tail -n +2 > $@.tmp
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-generif-mesh-refs.txt:	\
+		$(DIRECT_GD_PREFIX)/all-mesh-terms.txt \
+		$(PM_MESH_PARENT_PREFIX)/load-mesh-parent.txt
+	rm -f $@.tmp
+	while read term; do echo "SELECT mesh_parent AS term, COUNT(DISTINCT pmid) FROM pubmed_mesh_parent WHERE term=\"$$term\"" | $(SQL_CMD) | tail -n +2 >> $@.tmp ; done < $(DIRECT_GD_PREFIX)/all-mesh-terms.txt
+	sort $@.tmp > $@ ; rm $@.tmp
+
+$(DIRECT_GD_PREFIX)/all-generif-gene-mesh-merge.txt:	\
+		$(DIRECT_GD_PREFIX)/all-generif-gene-mesh.txt \
+		$(DIRECT_GD_PREFIX)/all-generif-mesh-refs.txt \
+		$(DIRECT_GD_PREFIX)/all-generif-gene-refs.txt
+	join $(DIRECT_GD_PREFIX)/all-generif-gene-mesh.txt $(DIRECT_GD_PREFIX)/all-generif-gene-refs.txt > $@.tmp
+	join -1 3 -2 1 $@.tmp $(DIRECT_GD_PREFIX)/all-generif-mesh-refs.txt > $@.tmp2
+	rm $@.tmp ; mv $@.tmp2 $@
+

@@ -1,0 +1,61 @@
+2008-07-16 Warren
+	BUG mysql-dbrc does not detect failure to find DB (fails silently if
+	database doesn't exist)
+	
+2008-07-10 Warren
+	Plan - top level makefile includes lower level makefiles
+
+	Never reference files in the directly by name,  but via variable
+	for the current directory e.g.  $(MESH_PARSE)/file.c rather than
+	file.c
+
+	
+
+2008-07-10 Warren
+	All Makefiles in the top level, to simplify directory names?
+
+	Don't worry too much about separating the data from the "Stubs" --
+	use the version control to handle that
+
+	"Distrib" version gotten from a clean checkout
+
+	Toplevel config file included in all the makefiles
+	* specify programs, database servers, etc...
+
+	OK,  Recursive make is bad,  what will go in each directory are 
+	makefile stubs that will be included in the master makefile. 
+	* also simplifies dependencies, since everything is actually
+	relative to the top-level
+	
+2008-07-09 Warren
+	Rebooting the files - idea is to separate into subdirs, each
+	"task" in a subdir?
+
+	Easier to maintain than a single monolithic makefile?
+
+	Extract into "submakefiles"
+
+	Pros: Easier to maintain? (if one part breaks the rest keeps on
+	ticking) Separate the individual sub-projects, rather than having
+	a million files in a directory
+
+	Cons: dependencies need to be completely built to continue - more
+	work keeping them all synchronised?  (if updating the cluter
+	portion, more work to be done?)
+
+	Should all be based on the same template?
+	(Maybe make the header the same, and create the makefiles by
+	appending specific bits?)
+
+	Multiple files - put into a subdirectory, Each directory has a
+	README describing its purpose
+
+	Current reorganisation
+	* READMEs in the directories explaining purpose
+	* move everything into a pubmed_parse dir
+	* move to a different location the parsers for gene,  etc.
+
+	* split the SQL tables on a per-subproject basis
+	* Where is the gene-disease computation?  
+
+

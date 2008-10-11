@@ -1,0 +1,20 @@
+Output files for profile gene-disease predictions
+
+REF_SOURCE can refer to gene2pubmed or generif gene-pubmed references
+
+hum-disease-REF_SOURCE-profiles.txt:    gene-profile to disease-profile 
+					comparison results
+
+Output format:
+(disease|gene|I|U|L2_count|L2_count_Norm|L2_p|L2_logp|Intersect_L2_count_Norm|Intersect_L2_logp|sumdiff_logp|sum_logcombinedp)
+I : number of intersecting (common) terms
+U : number of union (all) terms
+L2_count:  L2 Distance,  raw term instances
+L2_count_Norm:  L2 Distance,  term instances normalised by total term instances
+L2_p : L2 Distance, hypergeometric p values
+L2_logp : L2 Distance, log p values
+Intersect_L2_count_Norm : Intersecting terms, L2 Distance, normalised counts
+Intersect_L2_logp : Intersecting terms, L2 Distance, log p values
+sumdiff_logp : Sum of differences, log p values
+sum_logcombinedp : Sum,  combined p value
+

@@ -1,0 +1,10 @@
+Extracted from EntrezGene:
+gene_info
+gene2pubmed
+		
+parsed_basic_rif.txt:	geneRIFs,  expanded to have one pubmed-one gene per line
+
+Size of the successfully loaded database tables:
+load_gene.txt 
+load_gene2pubmed.txt 
+load_generif.txt

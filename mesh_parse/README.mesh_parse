@@ -1,0 +1,12 @@
+# xsl parser for the MeSH XML format files
+
+# Extract the MeSH term,  MeSH tree descriptors and MeSH term ID for each term
+ Where to put the output files?
+
+../txt/mesh
+
+
+Run by doing
+
+cat sample.xml| xsltproc mesh_ids.xsl - > ../txt/mesh/mesh_ids.txt
+cat sample.xml| xsltproc mesh_tree.xsl - > ../txt/mesh/mesh_tree.txt
