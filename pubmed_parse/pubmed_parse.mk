@@ -16,6 +16,7 @@ PM_MESH_PARENT_PREFIX=$(PUBMED_PREFIX)/mesh_parent
 PM_TITLES_PREFIX=$(PUBMED_PREFIX)/titles
 PM_COMESH_PREFIX=$(PUBMED_PREFIX)/comesh
 PM_CHEM_PREFIX=$(PUBMED_PREFIX)/chem
+PM_AUTHOR_PREFIX=$(PUBMED_PREFIX)/author
 
 PUBMED_XML_GZ=$(wildcard $(PUBMED_XML)/*.xml.gz)
 
@@ -24,6 +25,7 @@ PUBMED_MESH_TXT=$(PUBMED_XML_GZ:$(PUBMED_XML)/%.xml.gz=$(PM_MESH_PREFIX)/%.mesh.
 PUBMED_MESH_PARENT_TXT=$(PUBMED_XML_GZ:$(PUBMED_XML)/%.xml.gz=$(PM_MESH_PARENT_PREFIX)/%.mesh-parent.txt)
 PUBMED_COMESH_TXT=$(PUBMED_XML_GZ:$(PUBMED_XML)/%.xml.gz=$(PM_COMESH_PREFIX)/%.comesh.txt) 
 PUBMED_CHEM_TXT=$(PUBMED_XML_GZ:$(PUBMED_XML)/%.xml.gz=$(PM_CHEM_PREFIX)/%.chem.txt)
+PUBMED_AUTHOR_TXT=$(PUBMED_XML_GZ:$(PUBMED_XML)/%.xml.gz=$(PM_AUTHOR_PREFIX)/%.author.txt)
 
 # XSL conversion files
 # PMIDs and Article Titles
@@ -32,6 +34,8 @@ PUBMED_TITLES_XSL=$(PUBMED_PARSE)/pubmed-baseline-titles.xsl
 PUBMED_MESH_XSL=$(PUBMED_PARSE)/pubmed-baseline-mesh.xsl
 # PMIDs, Chemical Name
 PUBMED_CHEM_XSL=$(PUBMED_PARSE)/pubmed-baseline-chem.xsl
+# PMIDs, Authors
+PUBMED_AUTHOR_XSL=$(PUBMED_PARSE)/pubmed-baseline-author.xsl
 # MeSH Child imported from mesh_parse
 MESH_CHILD=$(MESH_PREFIX)/mesh-child.txt
 
@@ -40,7 +44,7 @@ MESH_CHILD=$(MESH_PREFIX)/mesh-child.txt
 XSLT_PUBMED_TITLES_CMD=xsltproc --novalid $(PUBMED_TITLES_XSL) -
 XSLT_PUBMED_MESH_CMD=xsltproc --novalid $(PUBMED_MESH_XSL) -
 XSLT_PUBMED_CHEM_CMD=xsltproc --novalid $(PUBMED_CHEM_XSL) -
-
+XSLT_PUBMED_AUTHOR_CMD=xsltproc --novalid $(PUBMED_AUTHOR_XSL) -
 
 pubmed_parse: $(PUBMED_TITLES_TXT) $(PUBMED_MESH_TXT) $(PUBMED_CHEM_TXT) \
 	$(PUBMED_MESH_PARENT_TXT) $(PUBMED_COMESH_TXT) \
@@ -49,6 +53,10 @@ pubmed_parse: $(PUBMED_TITLES_TXT) $(PUBMED_MESH_TXT) $(PUBMED_CHEM_TXT) \
 	$(PM_MESH_PREFIX)/load-mesh.txt \
 	$(PM_MESH_PARENT_PREFIX)/load-mesh-parent.txt
 
+pubmed_parse_titles:	$(PUBMED_TITLES_TXT)
+pubmed_parse_mesh:	$(PUBMED_MESH_TXT)
+pubmed_parse_chem:	$(PUBMED_CHEM_TXT)
+pubmed_parse_author:	$(PUBMED_AUTHOR_TXT)
 
 pubmed_parse_clean:
 	rm -f $(PM_TITLES_PREFIX)/*.titles.txt
@@ -58,16 +66,25 @@ pubmed_parse_clean:
 	rm -f $(PM_COMESH_PREFIX)/*.comesh.txt
 
 $(PM_TITLES_PREFIX)/%.titles.txt: $(PUBMED_XML)/%.xml.gz
+		$(PUBMED_PARSE)/pubmed-baseline-titles.xsl
 	zcat $< | $(XSLT_PUBMED_TITLES_CMD) >> $@.tmp 
 	mv $@.tmp $@
 
 $(PM_MESH_PREFIX)/%.mesh.txt: $(PUBMED_XML)/%.xml.gz
+		$(PUBMED_PARSE)/pubmed-baseline-mesh.xsl
 	zcat $< | $(XSLT_PUBMED_MESH_CMD) >> $@.tmp 
 	mv $@.tmp $@
 
 
 $(PM_CHEM_PREFIX)/%.chem.txt: $(PUBMED_XML)/%.xml.gz
+		$(PUBMED_PARSE)/pubmed-baseline-chem.xsl
 	zcat $< | $(XSLT_PUBMED_CHEM_CMD) >> $@.tmp 
+	mv $@.tmp $@
+
+$(PM_AUTHOR_PREFIX)/%.author.txt: $(PUBMED_XML)/%.xml.gz \
+		$(PUBMED_PARSE)/pubmed-baseline-author.xsl \
+		$(PUBMED_PARSE)/pubmed-baseline-author.py 
+	zcat $< | $(XSLT_PUBMED_AUTHOR_CMD) | python $(PUBMED_PARSE)/pubmed-baseline-author.py >> $@.tmp 
 	mv $@.tmp $@
 
 $(PM_MESH_PARENT_PREFIX)/%.mesh-parent.txt $(PM_COMESH_PREFIX)/%.comesh.txt: $(PM_MESH_PREFIX)/%.mesh.txt $(MESH_CHILD)
