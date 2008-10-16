@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MedlineCitationSet PUBLIC "-//NLM//DTD Medline Citation, 1st January 2007//EN"
+                                    "http://www.nlm.nih.gov/databases/dtd/nlmmedline_070101.dtd">
+<MedlineCitationSet>
+<MedlineCitation Owner="PIP" Status="MEDLINE">
+<PMID>12236137</PMID>
+<DateCreated>
+<Year>1980</Year>
+<Month>01</Month>
+<Day>03</Day>
+</DateCreated>
+<DateCompleted>
+<Year>1980</Year>
+<Month>01</Month>
+<Day>03</Day>
+</DateCompleted>
+<DateRevised>
+<Year>2006</Year>
+<Month>11</Month>
+<Day>15</Day>
+</DateRevised>
+<Article PubModel="Print">
+<Journal>
+<ISSN IssnType="Print">0044-278X</ISSN>
+<JournalIssue CitedMedium="Print">
+<Volume>92</Volume>
+<PubDate>
+<Year>1928</Year>
+</PubDate>
+</JournalIssue>
+<Title>Zeitschrift fÃ¼r Geburtshilfe und GynÃ¤kologie</Title>
+</Journal>
+<ArticleTitle>[A new hysteroscope and its practical use in gynecology]</ArticleTitle>
+<Pagination>
+<MedlinePgn>13-25</MedlinePgn>
+</Pagination>
+<AuthorList CompleteYN="Y">
+<Author ValidYN="Y">
+<LastName>Mikulicz-radecki</LastName>
+<ForeName>F V</ForeName>
+<Initials>FV</Initials>
+</Author>
+<Author ValidYN="Y">
+<LastName>Freund</LastName>
+<ForeName>A</ForeName>
+<Initials>A</Initials>
+</Author>
+</AuthorList>
+<Language>ger</Language>
+<PublicationTypeList>
+<PublicationType>English Abstract</PublicationType>
+<PublicationType>Journal Article</PublicationType>
+</PublicationTypeList>
+<VernacularTitle>Ein neues Hysteroskop und seine praktische Anwendung in der Gynakologie.</VernacularTitle>
+</Article>
+<MedlineJournalInfo>
+<Country>United States</Country>
+<MedlineTA>Z Geburtshilfe Gynakol</MedlineTA>
+<NlmUniqueID>0326204</NlmUniqueID>
+</MedlineJournalInfo>
+<CitationSubset>J</CitationSubset>
+<MeshHeadingList>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Diagnosis</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Endometrial Neoplasms</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Endoscopy</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="Y">Hysteroscopy</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Physical Examination</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="Y">Research</DescriptorName>
+</MeshHeading>
+</MeshHeadingList>
+<OtherID Source="PIP">116453</OtherID>
+<OtherID Source="POP">00029606</OtherID>
+<OtherAbstract Type="PIP">
+<AbstractText>Improvements to Freund's uterine curettoscope (1924) are described a nd practical applications of the instrument are reported.  The lens of the instrument has been placed very close to the end, in order to visualize the tubes, a tube for the introduction of a sound or catheter has been added, a moveable joint was added to control the direction of the catheter, and the  currette was eliminated.  The resulting instrument, called the &quot;tube hysteroscope,&quot; has been used for examinations in 50 patients;  physiological data of great interest have been collected, and the instrument's usefulness in the diagnosis of uterine carcinoma, polyps, myoma, and tubal function has been demonstrat ed.  Uterine perforation occurred in 1 case, already complicated by tubal and ovarian infection.  The author recommends the strictest asepsis, and timing during the intermenstruum.</AbstractText>
+</OtherAbstract>
+<KeywordList Owner="PIP">
+<Keyword MajorTopicYN="Y">Clinical Research</Keyword>
+<Keyword MajorTopicYN="N">Endometrial Cancer</Keyword>
+<Keyword MajorTopicYN="N">Endoscopy</Keyword>
+<Keyword MajorTopicYN="N">Examinations And Diagnoses</Keyword>
+<Keyword MajorTopicYN="Y">Hysteroscopy--history</Keyword>
+<Keyword MajorTopicYN="N">Physical Examinations And Diagnoses</Keyword>
+<Keyword MajorTopicYN="N">Research Methodology</Keyword>
+</KeywordList>
+</MedlineCitation>
+<MedlineCitation Owner="PIP" Status="MEDLINE">
+<PMID>12305346</PMID>
+<DateCreated>
+<Year>1980</Year>
+<Month>01</Month>
+<Day>03</Day>
+</DateCreated>
+<DateCompleted>
+<Year>1980</Year>
+<Month>01</Month>
+<Day>03</Day>
+</DateCompleted>
+<DateRevised>
+<Year>2003</Year>
+<Month>11</Month>
+<Day>14</Day>
+</DateRevised>
+<Article PubModel="Print">
+<Journal>
+<ISSN IssnType="Print">0368-3338</ISSN>
+<JournalIssue CitedMedium="Print">
+<Volume>17</Volume>
+<PubDate>
+<Year>1934</Year>
+</PubDate>
+</JournalIssue>
+<Title>The Japanese journal of obstetrics and gynecology</Title>
+</Journal>
+<ArticleTitle>A study on the birth control with an intrauterine instrument.</ArticleTitle>
+<Pagination>
+<MedlinePgn>210-4</MedlinePgn>
+</Pagination>
+<AuthorList CompleteYN="Y">
+<Author ValidYN="Y">
+<LastName>Ota</LastName>
+<ForeName>T</ForeName>
+<Initials>T</Initials>
+</Author>
+</AuthorList>
+<Language>eng</Language>
+<PublicationTypeList>
+<PublicationType>Journal Article</PublicationType>
+</PublicationTypeList>
+</Article>
+<MedlineJournalInfo>
+<Country>United States</Country>
+<MedlineTA>Jpn J Obstet Gynecol</MedlineTA>
+<NlmUniqueID>0376566</NlmUniqueID>
+</MedlineJournalInfo>
+<CitationSubset>J</CitationSubset>
+<MeshHeadingList>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Contraception</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Family Planning Services</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="Y">Intrauterine Devices</DescriptorName>
+</MeshHeading>
+</MeshHeadingList>
+<OtherID Source="PIP">340001</OtherID>
+<OtherID Source="POP">00017147</OtherID>
+<OtherAbstract Type="PIP">
+<AbstractText>A metallic spiral IUD was inserted in 1 region of a rabbit uterus and tied to the uterine wall to test its effectiveness in pregnancy prevention.  Within 1 week and after 20 days, pregnancy was hindered in the region where the device was present.  The action of the IUD was irrespective of its composition.  Changes in the uterine mucous membrane were generally absent, and the uterus was without inflammatory findings and without necrosis or atrophy of the glands.  In clinical trials a modification of the Graefenberg ring was used.  This was termed the &quot;presear-ring&quot; and consisted of the addition of a flat ball in the center of the ring, thus increasing the surface area.  When compared with the Graefenberg ring the efficacy of the modified device was increased (5 pregnancies out of 53 vs. 1 pregnancy out of 73 cases, respectively).  Insertion of the device was easy and was performed on an outpatient basis.  Some gland proliferation was seen but without inflammation.  Pregnancy was possible after the ring was removed.  The materials used for the ring were gold or silver plated with gold.</AbstractText>
+</OtherAbstract>
+<KeywordList Owner="PIP">
+<Keyword MajorTopicYN="N">Contraception</Keyword>
+<Keyword MajorTopicYN="N">Contraceptive Methods</Keyword>
+<Keyword MajorTopicYN="N">Family Planning</Keyword>
+<Keyword MajorTopicYN="Y">Iud</Keyword>
+<Keyword MajorTopicYN="N">Iud Material</Keyword>
+</KeywordList>
+</MedlineCitation>
+</MedlineCitationSet>
