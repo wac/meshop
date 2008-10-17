@@ -11,7 +11,10 @@
 # load-db:  load files into database
 
 EGREP=grep -E -h 
-include config.mk
+# This file contains the defaults
+include config.default.mk
+# You can copy the defaults and make changes in config.mk
+sinclude config.mk
 
 ### Output Directories
 

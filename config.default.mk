@@ -1,5 +1,6 @@
 # Configuration
-# Modify these to point to the appropriate tools, datafile locations
+# Copy this file to config.mk and make changes there 
+# Point to your personal directories, etc
 
 # Input Files
 # Gzip XML files for PubMed
