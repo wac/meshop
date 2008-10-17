@@ -3,6 +3,8 @@ import sys
 last_pmid=-1
 sep='|'
 prevline=""
+firstauthorYN='Y'
+
 for line in sys.stdin:
     line=line.strip()
     tuple=line.split(sep)
@@ -12,9 +14,12 @@ for line in sys.stdin:
         prevline=line
     else:
         if last_pmid==curr_pmid:
-            print prevline+sep+"N"
+            print prevline+sep+"N"+sep+firstauthorYN
+            firstauthorYN='N'
         else:
-            print prevline+sep+"Y"
+            print prevline+sep+"Y"+sep+firstauthorYN
+            firstauthorYN='Y'
+            
         prevline=line
         
-print prevline+sep+"Y"
+print prevline+sep+"Y"+sep+firstauthorYN

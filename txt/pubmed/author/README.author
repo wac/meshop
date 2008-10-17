@@ -1,2 +1,3 @@
-*.author.txt:	     PMID, Author Lastname, Forename, Initials, Last Author YN
+*.author.txt:	     Format: 
+		     PMID|AuthorLastname|Forename|Initials|LastAuthorYN|FirstAuthorYN
 load*:		     Database Loaed
