@@ -123,3 +123,9 @@ $(PM_MESH_PARENT_PREFIX)/load-mesh-parent.txt: $(PUBMED_MESH_PARENT_TXT)
 	echo "DELETE FROM pubmed_mesh_parent" | mysql-dbrc $DBNAME
 	for file in $(PUBMED_MESH_PARENT_TXT); do echo "LOAD DATA LOCAL INFILE '$$file' INTO TABLE pubmed_mesh_parent FIELDS TERMINATED by '|' IGNORE 1 LINES" | $(SQL_CMD); done > $@.tmp
 	mv $@.tmp $@
+
+$(PM_AUTHOR_PREFIX)/load-author.txt: $(PUBMED_AUTHOR_TXT)
+	cat $(PUBMED_PARSE)/pubmed_tables.sql | $(SQL_CMD)
+	echo "DELETE FROM pubmed_author" | mysql-dbrc $DBNAME
+	for file in $(PUBMED_AUTHOR_TXT); do echo "LOAD DATA LOCAL INFILE '$$file' INTO TABLE pubmed_author FIELDS TERMINATED by '|' IGNORE 1 LINES" | $(SQL_CMD); done > $@.tmp
+	mv $@.tmp $@

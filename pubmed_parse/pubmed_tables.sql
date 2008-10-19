@@ -33,4 +33,13 @@ term VARCHAR(256),
 PRIMARY KEY (pmid, term)
 );
 
-
+CREATE TABLE IF NOT EXISTS pubmed_author
+(
+pmid int,
+lastname VARCHAR(256),
+forename VARCHAR(256),
+initials VARCHAR(64),
+lastauthorYN VARCHAR(1),
+firstauthorYN VARCHAR(1),
+PRIMARY KEY (pmid, lastname, forename, initials)
+);
