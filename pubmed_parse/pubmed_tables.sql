@@ -1,7 +1,10 @@
 CREATE TABLE IF NOT EXISTS pubmed
 (
 	pmid int PRIMARY KEY,
-	title varchar(512)
+	title varchar(512),
+	journaltitle varchar(256),
+	journalisoabbrev varchar(256),
+	pubyear int
 );
 
 CREATE TABLE IF NOT EXISTS pubmed_mesh
