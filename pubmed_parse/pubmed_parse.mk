@@ -65,18 +65,18 @@ pubmed_parse_clean:
 	rm -f $(PM_MESH_PARENT_PREFIX)/*.mesh-parent.txt
 	rm -f $(PM_COMESH_PREFIX)/*.comesh.txt
 
-$(PM_TITLES_PREFIX)/%.titles.txt: $(PUBMED_XML)/%.xml.gz
+$(PM_TITLES_PREFIX)/%.titles.txt: $(PUBMED_XML)/%.xml.gz \
 		$(PUBMED_PARSE)/pubmed-baseline-titles.xsl
 	zcat $< | $(XSLT_PUBMED_TITLES_CMD) >> $@.tmp 
 	mv $@.tmp $@
 
-$(PM_MESH_PREFIX)/%.mesh.txt: $(PUBMED_XML)/%.xml.gz
+$(PM_MESH_PREFIX)/%.mesh.txt: $(PUBMED_XML)/%.xml.gz \
 		$(PUBMED_PARSE)/pubmed-baseline-mesh.xsl
 	zcat $< | $(XSLT_PUBMED_MESH_CMD) >> $@.tmp 
 	mv $@.tmp $@
 
 
-$(PM_CHEM_PREFIX)/%.chem.txt: $(PUBMED_XML)/%.xml.gz
+$(PM_CHEM_PREFIX)/%.chem.txt: $(PUBMED_XML)/%.xml.gz \
 		$(PUBMED_PARSE)/pubmed-baseline-chem.xsl
 	zcat $< | $(XSLT_PUBMED_CHEM_CMD) >> $@.tmp 
 	mv $@.tmp $@
