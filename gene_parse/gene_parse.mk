@@ -1,3 +1,5 @@
+# ADD HISTOGRAM genes per pmid,  pmid per gene
+
 gene_parse:	$(GENE_PREFIX)/gene_info $(GENE_PREFIX)/gene2pubmed \
 		$(GENE_PREFIX)/parsed_basic_rif.txt \
 		$(GENE_PREFIX)/load_gene.txt \
