@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS pubmed
 	title varchar(512),
 	journaltitle varchar(256),
 	journalisoabbrev varchar(256),
-	pubyear int
+	pubyear int,
+	affiliation varchar(512)
 );
 
 CREATE TABLE IF NOT EXISTS pubmed_mesh

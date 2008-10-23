@@ -8,7 +8,8 @@
 <xsl:value-of select="normalize-space(Article/ArticleTitle)"/>|<xsl:text/>
 <xsl:value-of select="normalize-space(Article/Journal/Title)"/>|<xsl:text/>
 <xsl:value-of select="normalize-space(Article/Journal/ISOAbbreviation)"/>|<xsl:text/>
-<xsl:value-of select="normalize-space(Article/Journal/JournalIssue/PubDate/Year)"/><xsl:text/>
+<xsl:value-of select="normalize-space(Article/Journal/JournalIssue/PubDate/Year)"/>|<xsl:text/>
+<xsl:value-of select="normalize-space(Article/Affiliation)"/><xsl:text/>
 <xsl:text disable-output-escaping = "yes" >
 </xsl:text>
 </xsl:template> 
