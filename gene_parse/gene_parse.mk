@@ -29,12 +29,14 @@ $(GENE_PREFIX)/load_gene2pubmed.txt:	$(GENE_PARSE)/gene_tables.sql $(GENE_PREFIX
 	echo "LOAD DATA LOCAL INFILE '$(GENE_PREFIX)/gene2pubmed' INTO TABLE gene2pubmed IGNORE 1 lines (@dummy, gene_id, pmid);" | $(SQL_CMD) > $@.tmp
 	mv -f $@.tmp $@
 
-
 $(GENE_PREFIX)/load_generif.txt:	$(GENE_PARSE)/gene_tables.sql $(GENE_PREFIX)/parsed_basic_rif.txt
 	cat $(GENE_PARSE)/gene_tables.sql | $(SQL_CMD)
 	echo "DELETE FROM generif" | $(SQL_CMD)
 	echo "LOAD DATA LOCAL INFILE '$(GENE_PREFIX)/parsed_basic_rif.txt' INTO TABLE generif IGNORE 1 lines (gene_id, pmid, description);" | $(SQL_CMD) > $@.tmp
 	mv -f $@.tmp $@
+
+$(GENE_PREFIX)/$(REF_SOURCE)_hist.txt:
+		load_$(REF_SOURCE).txt
 
 gene_parse_clean:
 	rm -f $(GENE_PREFIX)/gene_info $(GENE_PREFIX)/gene2pubmed 
