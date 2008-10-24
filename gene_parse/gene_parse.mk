@@ -48,7 +48,11 @@ $(GENE_PREFIX)/all-gene2pubmed-gene-refs.txt:	\
 	cat $(GENE_PREFIX)/gene2pubmed | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 2 | uniq | cut -d "|" -f 2 | $(SED_RM_BLANK) | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@
 
-
+$(GENE_PREFIX)/$(REF_SOURCE)-ref-hist.pdf:
+		$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt \
+		$(GENE_PARSE)/gene_ref_hist.R
+	export PROCESS_INFILE=$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt ; export PROCESS_OUTFILE=$@.tmp ; export PROCESS_TITLE=$(REF_SOURCE) References in PubMed; R CMD BATCH --no-save $(GENE_PARSE)/gene_ref_hist.R > $@.log
+	mv $@.tmp $@
 
 gene_parse_clean:
 	rm -f $(GENE_PREFIX)/gene_info $(GENE_PREFIX)/gene2pubmed 
