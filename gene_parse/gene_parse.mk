@@ -37,8 +37,21 @@ $(GENE_PREFIX)/load_generif.txt:	$(GENE_PARSE)/gene_tables.sql $(GENE_PREFIX)/pa
 	echo "LOAD DATA LOCAL INFILE '$(GENE_PREFIX)/parsed_basic_rif.txt' INTO TABLE generif IGNORE 1 lines (gene_id, pmid, description);" | $(SQL_CMD) > $@.tmp
 	mv -f $@.tmp $@
 
-$(GENE_PREFIX)/$(REF_SOURCE)_hist.txt:
-		load_$(REF_SOURCE).txt
+$(GENE_PREFIX)/all-generif-gene-refs.txt:	\
+		$(GENE_PREFIX)/parsed_basic_rif.txt
+	cat $(GENE_PREFIX)/parsed_basic_rif.txt | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1  | uniq | cut -d "|" -f 1 | $(SED_RM_BLANK) | $(UNIQ_COUNT) > $@.tmp
+	mv $@.tmp $@
+
+$(GENE_PREFIX)/all-gene2pubmed-gene-refs.txt:	\
+		$(GENE_PREFIX)/gene2pubmed
+	cat $(GENE_PREFIX)/gene2pubmed | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 2 | uniq | cut -d "|" -f 2 | $(SED_RM_BLANK) | $(UNIQ_COUNT) > $@.tmp
+	mv $@.tmp $@
+
+$(GENE_PREFIX)/$(REF_SOURCE)-ref-hist.pdf:
+		$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt \
+		$(GENE_PARSE)/gene_ref_hist.R
+	export PROCESS_INFILE=$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt ; export PROCESS_OUTFILE=$@.tmp ; export PROCESS_TITLE=$(REF_SOURCE) References in PubMed; R CMD BATCH --no-save $(GENE_PARSE)/gene_ref_hist.R > $@.log
+	mv $@.tmp $@
 
 gene_parse_clean:
 	rm -f $(GENE_PREFIX)/gene_info $(GENE_PREFIX)/gene2pubmed 

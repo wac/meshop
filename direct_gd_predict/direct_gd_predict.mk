@@ -35,16 +35,6 @@ $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt:	\
 	echo "SELECT $(REF_SOURCE).gene_id, mesh_parent, $(REF_SOURCE).pmid FROM $(REF_SOURCE), pubmed_mesh_parent WHERE $(REF_SOURCE).pmid=pubmed_mesh_parent.pmid;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@
 
-$(DIRECT_GD_PREFIX)/all-generif-gene-refs.txt:	\
-		$(GENE_PREFIX)/parsed_basic_rif.txt
-	cat $(GENE_PREFIX)/parsed_basic_rif.txt | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1  | uniq | cut -d "|" -f 1 | $(SED_RM_BLANK) | $(UNIQ_COUNT) > $@.tmp
-	mv $@.tmp $@
-
-$(DIRECT_GD_PREFIX)/all-gene2pubmed-gene-refs.txt:	\
-		$(GENE_PREFIX)/gene2pubmed
-	cat $(GENE_PREFIX)/gene2pubmed | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 2 | uniq | cut -d "|" -f 2 | $(SED_RM_BLANK) | $(UNIQ_COUNT) > $@.tmp
-	mv $@.tmp $@
-
 $(DIRECT_GD_PREFIX)/all-mesh-refs.txt:	\
 		$(PM_MESH_PARENT_PREFIX)/load-mesh-parent.txt
 	echo "SELECT mesh_parent AS term, pmid FROM pubmed_mesh_parent;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) | uniq | cut -d "|" -f 1 | $(UNIQ_COUNT) > $@.tmp
@@ -58,7 +48,7 @@ $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.mk:	\
 	echo PROFILE_PHYPER_TOTAL=`cat $(PM_TITLES_PREFIX)/load-titles.txt` >> $@.tmp ; \
 	echo PROFILE_GETP=$(DIRECT_GD_PREDICT)/get_pval.R >> $@.tmp ; \
 	echo PROFILE_MERGE_COC=$(DIRECT_GD_PREDICT)/merge_coc.py >> $@.tmp ; \
-	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt >> $@.tmp ;\
+	echo PROFILE_MERGE_COC_FILE1=$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt >> $@.tmp ;\
 	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.tmp ; \
 	echo PROFILE_REVERSED_INPUT=  >> $@.tmp ; \
 	echo FILTER_PAT=$(DIRECT_GD_PREFIX)/hum-gene.txt  >> $@.tmp ;\
@@ -73,7 +63,7 @@ $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt:	\
 		$(DIRECT_GD_PREDICT)/get_pval.mk \
 		$(DIRECT_GD_PREDICT)/merge_coc.py \
 		$(DIRECT_GD_PREDICT)/filter_file.py \
-		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt \
+		$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt \
 		$(DIRECT_GD_PREFIX)/all-mesh-refs.txt \
 		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.mk \
 		$(PM_TITLES_PREFIX)/load-titles.txt \
