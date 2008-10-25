@@ -5,9 +5,9 @@ outfile
 title<-Sys.getenv("PROCESS_TITLE")
 
 # Loading into R
-gene_mesh<-read.table(infile, sep="|", quote="")
-gene_mesh[1,]
-h<-hist(generif_count[,2], plot=FALSE)
+gene_refs<-read.table(infile, sep="|", quote="")
+gene_refs[1,]
+h<-hist(gene_refs[,2], plot=FALSE)
 plot(h$counts, log="x", xlab="Gene References", ylab="Frequency", main=title)
 pdf(outfile)
 dev.off()
