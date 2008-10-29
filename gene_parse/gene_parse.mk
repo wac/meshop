@@ -47,10 +47,21 @@ $(GENE_PREFIX)/all-gene2pubmed-gene-refs.txt:	\
 	cat $(GENE_PREFIX)/gene2pubmed | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 2 | uniq | cut -d "|" -f 2 | $(SED_RM_BLANK) | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@
 
-$(GENE_PREFIX)/$(REF_SOURCE)-ref-hist.pdf: \
+$(GENE_PREFIX)/all-gene2pubmed-pmid-refs.txt:	\
+		$(GENE_PREFIX)/gene2pubmed
+	cat $(GENE_PREFIX)/gene2pubmed | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 3 | uniq | cut -d "|" -f 3 | $(SED_RM_BLANK) | $(UNIQ_COUNT) > $@.tmp
+	mv $@.tmp $@
+
+$(GENE_PREFIX)/$(REF_SOURCE)-gene-ref-hist.pdf: \
 		$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt \
 		$(GENE_PARSE)/gene_ref_hist.R
-	export PROCESS_INFILE=$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt && export PROCESS_OUTFILE=$@.tmp && export PROCESS_TITLE="$(REF_SOURCE) References in PubMed"; R CMD BATCH --no-save $(GENE_PARSE)/gene_ref_hist.R $@.log
+	export PROCESS_INFILE=$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt && export PROCESS_OUTFILE=$@.tmp && export PROCESS_TITLE="$(REF_SOURCE) PubMed References per Gene"; R CMD BATCH --no-save $(GENE_PARSE)/gene_ref_hist.R $@.log
+	mv $@.tmp $@
+
+$(GENE_PREFIX)/$(REF_SOURCE)-pmid-ref-hist.pdf: \
+		$(GENE_PREFIX)/all-$(REF_SOURCE)-pmid-refs.txt \
+		$(GENE_PARSE)/gene_ref_hist.R
+	export PROCESS_INFILE=$(GENE_PREFIX)/all-$(REF_SOURCE)-pmid-refs.txt && export PROCESS_OUTFILE=$@.tmp && export PROCESS_TITLE="$(REF_SOURCE) Gene References per PMID"; R CMD BATCH --no-save $(GENE_PARSE)/gene_ref_hist.R $@.log
 	mv $@.tmp $@
 
 gene_parse_clean:
