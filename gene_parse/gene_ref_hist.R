@@ -10,5 +10,5 @@ gene_refs[1,]
 h<-hist(gene_refs[,2], plot=FALSE, breaks=max(gene_refs[,2]))
 pdf(outfile)
 plot(h, col="blue", main=title, xlab="Number of References", ylab="Frequency", right=FALSE)
-plot(h, col="blue", xlim=c(0,20), main=title, xlab="Number of References", ylab="Frequency", right=FALSE)
+plot(h, col="blue", xlim=c(0,20), ylim=c(0,5000), main=title, xlab="Number of References", ylab="Frequency", right=FALSE)
 dev.off()
