@@ -9,6 +9,6 @@ gene_refs<-read.table(infile, sep="|", quote="")
 gene_refs[1,]
 h<-hist(gene_refs[,2], plot=FALSE, breaks=max(gene_refs[,2]))
 pdf(outfile)
-plot(col="blue")
-plot(col="blue", xlim=c(0:25))
+plot(h, col="blue", main=title, xlab="Number of References", ylab="Frequency of Genes")
+plot(h, col="blue", xlim=c(0,20), main=title, xlab="Number of References", ylab="Frequency of Genes")
 dev.off()
