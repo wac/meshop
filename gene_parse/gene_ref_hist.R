@@ -7,7 +7,8 @@ title<-Sys.getenv("PROCESS_TITLE")
 # Loading into R
 gene_refs<-read.table(infile, sep="|", quote="")
 gene_refs[1,]
-h<-hist(gene_refs[,2], plot=FALSE)
+h<-hist(gene_refs[,2], plot=FALSE, breaks=max(gene_refs[,2]))
 pdf(outfile)
-plot(h$counts, log="x", xlab="Gene References", ylab="Frequency", main=title)
+plot(col="blue")
+plot(col="blue", xlim=c(0:25))
 dev.off()
