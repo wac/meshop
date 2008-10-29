@@ -4,6 +4,9 @@ gene2pubmed
 		
 parsed_basic_rif.txt:	geneRIFs,  expanded to have one pubmed-one gene per line
 
+all-REF_SOURCE-gene-refs.txt:   Reference count for each gene (via REF_SOURCE)
+                                (gene_id, total refs)
+
 Size of the successfully loaded database tables:
 load_gene.txt 
 load_gene2pubmed.txt 
