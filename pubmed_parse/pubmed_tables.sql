@@ -45,5 +45,6 @@ forename VARCHAR(256),
 initials VARCHAR(64),
 lastauthorYN VARCHAR(1),
 firstauthorYN VARCHAR(1),
-PRIMARY KEY (pmid, lastname, forename, initials)
+PRIMARY KEY (pmid, lastname, forename, initials),
+INDEX (pmid)
 );
