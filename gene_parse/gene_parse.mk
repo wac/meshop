@@ -45,10 +45,15 @@ $(GENE_PREFIX)/all-generif-pmid-refs.txt:	\
 	cat $(GENE_PREFIX)/parsed_basic_rif.txt | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 2  | uniq | cut -d "|" -f 2 | $(SED_RM_BLANK) | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@
 
-$(GENE_PREFIX)/all-gene2pubmed-gene-refs.txt:	\
-		$(GENE_PREFIX)/parsed_basic_rif.txt
-	cat $(GENE_PREFIX)/parsed_basic_rif.txt | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 2  | uniq | cut -d "|" -f 2 | $(SED_RM_BLANK) | $(UNIQ_COUNT) > $@.tmp
+$(GENE_PREFIX)/all-gene2pubmed-gene-refs.txt:   \
+		$(GENE_PREFIX)/gene2pubmed
+	cat $(GENE_PREFIX)/gene2pubmed | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 2 | uniq | cut -d "|" -f 2 | $(SED_RM_BLANK) | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@
+
+#$(GENE_PREFIX)/all-gene2pubmed-gene-refs.txt:	\
+#		$(GENE_PREFIX)/parsed_basic_rif.txt
+#	cat $(GENE_PREFIX)/parsed_basic_rif.txt | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 2  | uniq | cut -d "|" -f 2 | $(SED_RM_BLANK) | $(UNIQ_COUNT) > $@.tmp
+#	mv $@.tmp $@
 
 $(GENE_PREFIX)/all-gene2pubmed-pmid-refs.txt:	\
 		$(GENE_PREFIX)/gene2pubmed

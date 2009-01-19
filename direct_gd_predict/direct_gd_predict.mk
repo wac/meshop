@@ -57,7 +57,7 @@ $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.mk:	\
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.tmp 
 	mv $@.tmp $@
 
-$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt:	\
+$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt $(DIRECT_GD_PREFIX)/hum-$(REF_SOURCE)-gene-mesh-p.txt: \
 		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREDICT)/get_pval.R \
 		$(DIRECT_GD_PREDICT)/get_pval.mk \
@@ -89,7 +89,7 @@ $(DIRECT_GD_PREFIX)/all-comesh-p.mk:	\
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk  >> $@.tmp
 	mv $@.tmp $@
 
-$(DIRECT_GD_PREFIX)/all-comesh-p.txt:	\
+$(DIRECT_GD_PREFIX)/all-comesh-p.txt $(DIRECT_GD_PREFIX)/disease-comesh-p.txt: \
 		$(PM_COMESH_PREFIX)/comesh-total.txt \
 		$(DIRECT_GD_PREDICT)/get_pval.R \
 		$(DIRECT_GD_PREDICT)/get_pval.mk \
@@ -111,9 +111,5 @@ $(DIRECT_GD_PREFIX)/hum-gene.txt:  $(GENE_PREFIX)/load_gene.txt
 	echo "SELECT gene_id from gene WHERE taxon_id=9606" | $(SQL_CMD) > $@.tmp
 	mv $@.tmp $@
 
-$(DIRECT_GD_PREFIX)/disease-comesh-p.txt: \
-		$(DIRECT_GD_PREFIX)/all-comesh-p.txt 
 
-$(DIRECT_GD_PREFIX)/hum-$(REF_SOURCE)-gene-mesh-p.txt: \
-		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt 
 
