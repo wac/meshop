@@ -168,4 +168,304 @@
 <Keyword MajorTopicYN="N">Iud Material</Keyword>
 </KeywordList>
 </MedlineCitation>
+<MedlineCitation Owner="NLM" Status="MEDLINE">
+<PMID>15817151</PMID>
+<DateCreated>
+<Year>2005</Year>
+<Month>04</Month>
+<Day>08</Day>
+</DateCreated>
+<DateCompleted>
+<Year>2005</Year>
+<Month>06</Month>
+<Day>16</Day>
+</DateCompleted>
+<DateRevised>
+<Year>2007</Year>
+<Month>11</Month>
+<Day>14</Day>
+</DateRevised>
+<Article PubModel="Print">
+<Journal>
+<ISSN IssnType="Print">0014-4827</ISSN>
+<JournalIssue CitedMedium="Print">
+<Volume>305</Volume>
+<Issue>2</Issue>
+<PubDate>
+<Year>2005</Year>
+<Month>May</Month>
+<Day>1</Day>
+</PubDate>
+</JournalIssue>
+<Title>Experimental cell research</Title>
+<ISOAbbreviation>Exp. Cell Res.</ISOAbbreviation>
+</Journal>
+<ArticleTitle>The catenin p120ctn inhibits 
+Kaiso-mediated transcriptional repression of the 
+beta-catenin/TCF target gene 
+matrilysin.</ArticleTitle>
+<Pagination>
+<MedlinePgn>253-65</MedlinePgn>
+</Pagination>
+<Abstract>
+<AbstractText>The POZ-zinc finger transcription 
+factor Kaiso was first identified as a specific 
+binding partner for the Armadillo catenin and cell 
+adhesion cofactor, p120ctn. Kaiso is a unique POZ 
+protein with bi-modal DNA-binding properties; it 
+associates with a sequence-specific DNA consensus 
+Kaiso binding site (KBS) or methylated CpG 
+dinucleotides, and regulates transcription of 
+artificial promoters containing either site. 
+Interestingly, the promoter of the 
+Wnt/beta-catenin/TCF target gene matrilysin 
+possesses two conserved copies of the KBS, which 
+suggested that Kaiso might regulate matrilysin 
+expression. In this study, we demonstrate using 
+chromatin immunoprecipitation analysis that Kaiso 
+associates with the matrilysin promoter in vivo. 
+Minimal promoter assays further confirmed that 
+Kaiso specifically repressed transcription of the 
+matrilysin promoter; mutation of the KBS element or 
+RNAi-mediated depletion of Kaiso abrogated this 
+effect. More importantly, Kaiso blocked 
+beta-catenin-mediated activation of the matrilysin 
+promoter. Consistent with our previous findings, 
+both Kaiso-DNA binding and Kaiso-mediated 
+transcriptional repression of the matrilysin 
+promoter were inhibited by overexpression of 
+wild-type p120ctn, but not by a p120ctn mutant 
+exhibiting impaired nuclear import. Collectively, 
+our data establish Kaiso as a sequence-specific 
+transcriptional repressor of the matrilysin 
+promoter, and suggest that p120ctn and beta-catenin 
+act in a synergistic manner, via distinct 
+mechanisms, to activate matrilysin 
+expression.</AbstractText>
+</Abstract>
+<Affiliation>Department of Biology, LSB-331, 
+McMaster University, 1280 Main Street West, 
+Hamilton, ON, Canada L8S 4K1.</Affiliation>
+<AuthorList CompleteYN="Y">
+<Author ValidYN="Y">
+<LastName>Spring</LastName>
+<ForeName>Christopher M</ForeName>
+<Initials>CM</Initials>
+</Author>
+<Author ValidYN="Y">
+<LastName>Kelly</LastName>
+<ForeName>Kevin F</ForeName>
+<Initials>KF</Initials>
+</Author>
+<Author ValidYN="Y">
+<LastName>O'Kelly</LastName>
+<ForeName>Ita</ForeName>
+<Initials>I</Initials>
+</Author>
+<Author ValidYN="Y">
+<LastName>Graham</LastName>
+<ForeName>Monica</ForeName>
+<Initials>M</Initials>
+</Author>
+<Author ValidYN="Y">
+<LastName>Crawford</LastName>
+<ForeName>Howard C</ForeName>
+<Initials>HC</Initials>
+</Author>
+<Author ValidYN="Y">
+<LastName>Daniel</LastName>
+<ForeName>Juliet M</ForeName>
+<Initials>JM</Initials>
+</Author>
+</AuthorList>
+<Language>eng</Language>
+<GrantList CompleteYN="Y">
+<Grant>
+<GrantID>R01 CA-10012601</GrantID>
+<Acronym>CA</Acronym>
+<Agency>United States NCI</Agency>
+</Grant>
+</GrantList>
+<PublicationTypeList>
+<PublicationType>Journal Article</PublicationType>
+<PublicationType>Research Support, N.I.H., 
+Extramural</PublicationType>
+<PublicationType>Research Support, Non-U.S. 
+Gov't</PublicationType>
+<PublicationType>Research Support, U.S. Gov't, 
+P.H.S.</PublicationType>
+</PublicationTypeList>
+</Article>
+<MedlineJournalInfo>
+<Country>United States</Country>
+<MedlineTA>Exp Cell Res</MedlineTA>
+<NlmUniqueID>0373226</NlmUniqueID>
+</MedlineJournalInfo>
+<ChemicalList>
+<Chemical>
+<RegistryNumber>0</RegistryNumber>
+<NameOfSubstance>CTNNB1 protein, 
+human</NameOfSubstance>
+</Chemical>
+<Chemical>
+<RegistryNumber>0</RegistryNumber>
+<NameOfSubstance>Catnb protein, 
+mouse</NameOfSubstance>
+</Chemical>
+<Chemical>
+<RegistryNumber>0</RegistryNumber>
+<NameOfSubstance>Cell Adhesion 
+Molecules</NameOfSubstance>
+</Chemical>
+<Chemical>
+<RegistryNumber>0</RegistryNumber>
+<NameOfSubstance>Cytoskeletal 
+Proteins</NameOfSubstance>
+</Chemical>
+<Chemical>
+<RegistryNumber>0</RegistryNumber>
+<NameOfSubstance>Phosphoproteins</NameOfSubstance>
+</Chemical>
+<Chemical>
+<RegistryNumber>0</RegistryNumber>
+<NameOfSubstance>Repressor 
+Proteins</NameOfSubstance>
+</Chemical>
+<Chemical>
+<RegistryNumber>0</RegistryNumber>
+<NameOfSubstance>Trans-Activators</NameOfSubstance>
+</Chemical>
+<Chemical>
+<RegistryNumber>0</RegistryNumber>
+<NameOfSubstance>Transcription 
+Factors</NameOfSubstance>
+</Chemical>
+<Chemical>
+<RegistryNumber>0</RegistryNumber>
+<NameOfSubstance>ZNF-kaiso protein, 
+human</NameOfSubstance>
+</Chemical>
+<Chemical>
+<RegistryNumber>0</RegistryNumber>
+<NameOfSubstance>beta Catenin</NameOfSubstance>
+</Chemical>
+<Chemical>
+<RegistryNumber>0</RegistryNumber>
+<NameOfSubstance>cadherin-associated Src substrate 
+p120</NameOfSubstance>
+</Chemical>
+<Chemical>
+<RegistryNumber>EC 3.4.24.23</RegistryNumber>
+<NameOfSubstance>Matrix Metalloproteinase 
+7</NameOfSubstance>
+</Chemical>
+</ChemicalList>
+<CitationSubset>IM</CitationSubset>
+<MeshHeadingList>
+<MeshHeading>
+<DescriptorName 
+MajorTopicYN="N">Animals</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Base 
+Sequence</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Cell Adhesion 
+Molecules</DescriptorName>
+<QualifierName 
+MajorTopicYN="N">genetics</QualifierName>
+<QualifierName 
+MajorTopicYN="Y">physiology</QualifierName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Chromatin 
+Immunoprecipitation</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Cytoskeletal 
+Proteins</DescriptorName>
+<QualifierName 
+MajorTopicYN="Y">metabolism</QualifierName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName 
+MajorTopicYN="N">Down-Regulation</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="Y">Gene Expression 
+Regulation</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName 
+MajorTopicYN="N">Humans</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Matrix 
+Metalloproteinase 7</DescriptorName>
+<QualifierName 
+MajorTopicYN="Y">genetics</QualifierName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName 
+MajorTopicYN="N">Mice</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Molecular Sequence 
+Data</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName 
+MajorTopicYN="N">Phosphoproteins</DescriptorName>
+<QualifierName 
+MajorTopicYN="N">genetics</QualifierName>
+<QualifierName 
+MajorTopicYN="Y">physiology</QualifierName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Promoter Regions 
+(Genetics)</DescriptorName>
+<QualifierName 
+MajorTopicYN="N">genetics</QualifierName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">RNA 
+Interference</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Repressor 
+Proteins</DescriptorName>
+<QualifierName MajorTopicYN="Y">antagonists &amp; 
+inhibitors</QualifierName>
+<QualifierName 
+MajorTopicYN="N">genetics</QualifierName>
+<QualifierName 
+MajorTopicYN="N">physiology</QualifierName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName 
+MajorTopicYN="N">Trans-Activators</DescriptorName>
+<QualifierName 
+MajorTopicYN="Y">metabolism</QualifierName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Transcription 
+Factors</DescriptorName>
+<QualifierName MajorTopicYN="Y">antagonists &amp; 
+inhibitors</QualifierName>
+<QualifierName 
+MajorTopicYN="N">genetics</QualifierName>
+<QualifierName 
+MajorTopicYN="N">physiology</QualifierName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Transcription, 
+Genetic</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">beta 
+Catenin</DescriptorName>
+</MeshHeading>
+</MeshHeadingList>
+</MedlineCitation>
 </MedlineCitationSet>

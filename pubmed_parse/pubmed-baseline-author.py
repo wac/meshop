@@ -19,6 +19,7 @@ for line in sys.stdin:
         else:
             print prevline+sep+"Y"+sep+firstauthorYN
             firstauthorYN='Y'
+            last_pmid=curr_pmid
             
         prevline=line
         
