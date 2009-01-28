@@ -18,11 +18,11 @@
 # PROFILE_REVERSED_INPUT= 
 
 # Intermediate Datafile prefix
-SPLIT_PREFIX=$(PROFILE_INPUT_DATA).split
+SPLIT_PREFIX=$(PROFILE_OUTPUT_FILE).split
 SPLIT_FILES=$(wildcard $(SPLIT_PREFIX).*.in)
 
 # Processed File Output
-PROCESS_PREFIX=$(PROFILE_INPUT_DATA).process
+PROCESS_PREFIX=$(PROFILE_OUTPUT_FILE).process
 PROCESS_FILES=$(SPLIT_FILES:$(SPLIT_PREFIX).%.in=$(PROCESS_PREFIX).%.out)
 FILTERED_PROCESS_FILES=$(SPLIT_FILES:$(SPLIT_PREFIX).%.in=$(PROCESS_PREFIX).%.out.filtered)
 
@@ -32,7 +32,8 @@ split: $(SPLIT_PREFIX).done.dummy
 
 $(SPLIT_PREFIX).done.dummy:	$(PROFILE_INPUT_DATA)
 	rm -f $(SPLIT_PREFIX).*
-	rm -f $@
+	rm -f $(PROCESS_FILES) 
+	rm -f $(FILTERED_PROCESS_FILES)
 	cat $(PROFILE_INPUT_DATA) | split --lines=$(SPLIT_LINES) - $(SPLIT_PREFIX).
 	for f in $(SPLIT_PREFIX).* ;  do mv $$f $$f.in; done 
 	touch $@
@@ -42,9 +43,9 @@ $(PROCESS_PREFIX).%.out: $(SPLIT_PREFIX).%.in
 #		$(PROFILE_GETP) $(PROFILE_MERGE_COC) \
 #		$(PROFILE_MERGE_COC_FILE1) $(PROFILE_MERGE_COC_FILE2)
 	python $(PROFILE_MERGE_COC) $< $(PROFILE_MERGE_COC_FILE1) $(PROFILE_MERGE_COC_FILE2) $(PROFILE_PHYPER_TOTAL) $(PROFILE_REVERSED_INPUT) > $<.tmp
-	export PROCESS_INFILE=$<.tmp ; export PROCESS_OUTFILE=$@.tmp ; R CMD BATCH --no-save $(PROFILE_GETP) $@.log
+	hostname > $@.host ; export PROCESS_INFILE=$<.tmp ; export PROCESS_OUTFILE=$@.tmp ; R CMD BATCH --no-save $(PROFILE_GETP) $@.log
 	$(FILTER_CMD) $(FILTER_PAT) $@.tmp > $@.filtered
-	rm $<.tmp ; mv $@.tmp $@
+	rm $<.tmp ; mv $@.tmp $@ ; rm $@.host
 
 
 # Command to join the processed files
@@ -63,7 +64,7 @@ $(FILTERED_OUTPUT_FILE):	$(PROCESS_FILES)
 	$(JOIN_CMD) $(FILTERED_PROCESS_FILES) > $(FILTERED_OUTPUT_FILE).tmp
 	mv $(FILTERED_OUTPUT_FILE).tmp $(FILTERED_OUTPUT_FILE)
 cleanup:
-	rm -f $(PROCESS_FILES) 
 	rm -f $(SPLIT_FILES) 
+	rm -f $(PROCESS_FILES) 
 	rm -f $(FILTERED_PROCESS_FILES)
 	rm -f $(SPLIT_PREFIX).done.dummy

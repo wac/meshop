@@ -13,10 +13,9 @@ SED_RM_BLANK=sed '/^$$/d'
 
 # Command to sort - Assume working directory is safe since some of the
 # files will be (very) large
-# sort by general numerical value (to account for separators)
 #  -do NOT sort using dictionary (alphanumeric) only
 # FIXME this leaves temp files that aren't deleted?!
-BIGSORT=sort -T $(BIGTMP_DIR) -g
+BIGSORT=sort -T $(BIGTMP_DIR) 
 
 direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt \
@@ -32,12 +31,13 @@ $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt:	\
 		$(PM_MESH_PARENT_PREFIX)/load-mesh-parent.txt \
 		$(GENE_PREFIX)/load_gene.txt \
 		$(GENE_PREFIX)/load_$(REF_SOURCE).txt
-	echo "SELECT $(REF_SOURCE).gene_id, mesh_parent, $(REF_SOURCE).pmid FROM $(REF_SOURCE), pubmed_mesh_parent WHERE $(REF_SOURCE).pmid=pubmed_mesh_parent.pmid;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp
+	echo "SELECT $(REF_SOURCE).gene_id, mesh_parent, $(REF_SOURCE).pmid FROM $(REF_SOURCE), pubmed_mesh_parent WHERE $(REF_SOURCE).pmid=pubmed_mesh_parent.pmid;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,2 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@
 
 $(DIRECT_GD_PREFIX)/all-mesh-refs.txt:	\
 		$(PM_MESH_PARENT_PREFIX)/load-mesh-parent.txt
-	echo "SELECT mesh_parent AS term, pmid FROM pubmed_mesh_parent;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) | uniq | cut -d "|" -f 1 | $(UNIQ_COUNT) > $@.tmp
+	echo "SELECT mesh_parent AS term, pmid FROM pubmed_mesh_parent;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" > $@.tmp1
+	cat $@.tmp1 | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@
 
 $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.mk:	\
@@ -57,7 +57,11 @@ $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.mk:	\
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.tmp 
 	mv $@.tmp $@
 
-$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt $(DIRECT_GD_PREFIX)/hum-$(REF_SOURCE)-gene-mesh-p.txt: \
+
+$(DIRECT_GD_PREFIX)/hum-$(REF_SOURCE)-gene-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt
+
+$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt: \
 		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREDICT)/get_pval.R \
 		$(DIRECT_GD_PREDICT)/get_pval.mk \
@@ -89,7 +93,10 @@ $(DIRECT_GD_PREFIX)/all-comesh-p.mk:	\
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk  >> $@.tmp
 	mv $@.tmp $@
 
-$(DIRECT_GD_PREFIX)/all-comesh-p.txt $(DIRECT_GD_PREFIX)/disease-comesh-p.txt: \
+$(DIRECT_GD_PREFIX)/disease-comesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/all-comesh-p.txt
+
+$(DIRECT_GD_PREFIX)/all-comesh-p.txt:
 		$(PM_COMESH_PREFIX)/comesh-total.txt \
 		$(DIRECT_GD_PREDICT)/get_pval.R \
 		$(DIRECT_GD_PREDICT)/get_pval.mk \
