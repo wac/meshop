@@ -124,6 +124,11 @@ $(PM_MESH_PARENT_PREFIX)/load-mesh-parent.txt: $(PUBMED_MESH_PARENT_TXT)
 	for file in $(PUBMED_MESH_PARENT_TXT); do echo "LOAD DATA LOCAL INFILE '$$file' INTO TABLE pubmed_mesh_parent FIELDS TERMINATED by '|' IGNORE 1 LINES" | $(SQL_CMD); done > $@.tmp
 	mv $@.tmp $@
 
+$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt: $(PM_MESH_PARENT_PREFIX)/load-mesh-parent.txt
+	echo "SELECT mesh_parent AS term, pmid FROM pubmed_mesh_parent;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/"  > $@.tmp
+	mv $@.tmp $@
+
+
 $(PM_AUTHOR_PREFIX)/load-author.txt: $(PUBMED_AUTHOR_TXT)
 	cat $(PUBMED_PARSE)/pubmed_tables.sql | $(SQL_CMD)
 	echo "DELETE FROM pubmed_author" | mysql-dbrc $DBNAME

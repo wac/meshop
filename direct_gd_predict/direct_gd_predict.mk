@@ -35,10 +35,16 @@ $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt:	\
 	mv $@.tmp $@
 
 $(DIRECT_GD_PREFIX)/all-mesh-refs.txt:	\
-		$(PM_MESH_PARENT_PREFIX)/load-mesh-parent.txt
-	echo "SELECT mesh_parent AS term, pmid FROM pubmed_mesh_parent;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" > $@.tmp1
-	cat $@.tmp1 | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp
+		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt
+	cat $< | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@
+
+# Use filter_file.py,  get list of REF_SOURCE related pmids
+$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-mesh-refs.txt: \
+		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt
+	echo "SELECT pmid FROM $(REF_SOURCE)" | $(SQL_CMD) | tail -n +2 | $(BIGSORT) | uniq > $@.tmp1
+	cat $< | python filter_file.py --field 2 $@.tmp1 | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp
+	mv $@.tmp $@ ; rm $@.tmp1
 
 $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.mk:	\
 		$(PM_TITLES_PREFIX)/load-titles.txt \
