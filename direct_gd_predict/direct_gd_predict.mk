@@ -124,5 +124,6 @@ $(DIRECT_GD_PREFIX)/hum-gene.txt:  $(GENE_PREFIX)/load_gene.txt
 	echo "SELECT gene_id from gene WHERE taxon_id=9606" | $(SQL_CMD) > $@.tmp
 	mv $@.tmp $@
 
-
-
+$(DIRECT_GD_PREFIX)/mus-gene.txt:  $(GENE_PREFIX)/load_gene.txt
+	echo "SELECT gene_id from gene WHERE taxon_id=10090" | $(SQL_CMD) > $@.tmp
+	mv $@.tmp $@
