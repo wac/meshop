@@ -47,6 +47,8 @@ $(PROCESS_PREFIX).%.out: $(SPLIT_PREFIX).%.in
 	$(FILTER_CMD) $(FILTER_PAT) $@.tmp > $@.filtered
 	rm $<.tmp ; mv $@.tmp $@ ; rm $@.host
 
+$(PROCESS_PREFIX).%.out.filtered: $(PROCESS_PREFIX).%.out
+
 
 # Command to join the processed files
 JOIN_CMD=cat
@@ -59,10 +61,12 @@ result:  $(PROFILE_OUTPUT_FILE) $(FILTERED_OUTPUT_FILE)
 $(PROFILE_OUTPUT_FILE):	$(PROCESS_FILES) 
 	$(JOIN_CMD) $(PROCESS_FILES) > $(PROFILE_OUTPUT_FILE).tmp
 	mv $(PROFILE_OUTPUT_FILE).tmp $(PROFILE_OUTPUT_FILE)
+
 # Filtered Process files are generated when the process files are made
-$(FILTERED_OUTPUT_FILE):	$(PROCESS_FILES) 
+$(FILTERED_OUTPUT_FILE):	$(FILTERED_PROCESS_FILES) 
 	$(JOIN_CMD) $(FILTERED_PROCESS_FILES) > $(FILTERED_OUTPUT_FILE).tmp
 	mv $(FILTERED_OUTPUT_FILE).tmp $(FILTERED_OUTPUT_FILE)
+
 cleanup:
 	rm -f $(SPLIT_FILES) 
 	rm -f $(PROCESS_FILES) 
