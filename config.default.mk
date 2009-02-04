@@ -18,3 +18,5 @@ DB_NAME=warrendb
 SQL_CMD=mysql-dbrc $(DB_NAME)
 
 REF_SOURCE=gene2pubmed
+
+TAXON_FILTER=hum

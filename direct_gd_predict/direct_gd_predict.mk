@@ -19,7 +19,8 @@ BIGSORT=sort -T $(BIGTMP_DIR)
 
 direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt \
-		$(DIRECT_GD_PREFIX)/all-comesh-p.txt 
+		$(DIRECT_GD_PREFIX)/all-comesh-p.txt \
+		$(DIRECT_GD_PREFIX)/hum-gene-$(REF_SOURCE)-mesh-refs.txt
 
 direct_gd_predict_clean: 
 	rm -f $(DIRECT_GD_PREFIX)/*.txt
@@ -39,10 +40,18 @@ $(DIRECT_GD_PREFIX)/all-mesh-refs.txt:	\
 	cat $< | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@
 
-# Use filter_file.py,  get list of REF_SOURCE related pmids
-$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-mesh-refs.txt: \
+# Only gene-referenced pmids
+$(DIRECT_GD_PREFIX)/hum-gene-$(REF_SOURCE)-mesh-refs.txt: \
+		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt \
+		$(DIRECT_GD_PREDICT)/filter_file.py
+	echo "SELECT pmid FROM $(REF_SOURCE), gene where $(REF_SOURCE).gene_id=gene.gene_id AND gene.taxon_id=9606" | $(SQL_CMD) | tail -n +2 | $(BIGSORT) | uniq > $@.tmp1
+	cat $< | python $(DIRECT_GD_PREDICT)/filter_file.py --field 2 $@.tmp1 | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp
+	mv $@.tmp $@ # ; rm $@.tmp1
+
+# Only disease-referenced pmids
+$(DIRECT_GD_PREFIX)/disease-$(REF_SOURCE)-mesh-refs.txt: \
 		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt
-	echo "SELECT pmid FROM $(REF_SOURCE)" | $(SQL_CMD) | tail -n +2 | $(BIGSORT) | uniq > $@.tmp1
+	echo "SELECT pmid FROM pubmed_mesh_parent WHERE mesh_parent='Disease'" | $(SQL_CMD) | tail -n +2 | $(BIGSORT) | uniq > $@.tmp1
 	cat $< | python filter_file.py --field 2 $@.tmp1 | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@ ; rm $@.tmp1
 
