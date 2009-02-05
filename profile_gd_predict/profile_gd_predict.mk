@@ -2,29 +2,29 @@
 # Computes profile to profile distances between gene-mesh profiles and
 # disease-mesh profiles
 
-profile_gd_predict: $(PROFILE_GD_PREFIX)/hum-disease-$(REF_SOURCE)-profiles.txt
+profile_gd_predict: $(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt
 
 profile_gd_predict_clean: 
 
 REF_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/$(REF_SOURCE)-profile
 
-$(PROFILE_GD_PREFIX)/hum-disease-$(REF_SOURCE)-profiles.txt: \
-		$(DIRECT_GD_PREFIX)/hum-$(REF_SOURCE)-gene-mesh-p.txt \
+$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt: \
+		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/disease-comesh-p.txt \
 		$(PROFILE_GD_PREDICT)/cmp-profile.py \
 		$(PROFILE_GD_PREDICT)/cmp-profile.mk \
 		$(PROFILE_GD_PREDICT)/split-gene-profiles.py \
-		$(PROFILE_GD_PREFIX)/hum-disease-$(REF_SOURCE)-profiles.mk
-	$(MAKE) -f $(PROFILE_GD_PREFIX)/hum-disease-$(REF_SOURCE)-profiles.mk split
-	$(MAKE) -f $(PROFILE_GD_PREFIX)/hum-disease-$(REF_SOURCE)-profiles.mk result
-	$(MAKE) -f $(PROFILE_GD_PREFIX)/hum-disease-$(REF_SOURCE)-profiles.mk cleanup
+		$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.mk
+	$(MAKE) -f $(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.mk split
+	$(MAKE) -f $(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.mk result
+	$(MAKE) -f $(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.mk cleanup
 
-$(PROFILE_GD_PREFIX)/hum-disease-$(REF_SOURCE)-profiles.mk: \
+$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.mk: \
 		$(PROFILE_GD_PREDICT)/cmp-profile.mk
-	echo PROFILE1_DATA=$(DIRECT_GD_PREFIX)/hum-$(REF_SOURCE)-gene-mesh-p.txt > $@.tmp;\
+	echo PROFILE1_DATA=$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt > $@.tmp;\
 	echo PROFILE2_DATA=$(DIRECT_GD_PREFIX)/disease-comesh-p.txt >> $@.tmp;\
 	echo PROFILE1_SPLIT_PY=$(PROFILE_GD_PREDICT)/split-gene-profiles.py >> $@.tmp ;\
-	echo OUTPUT_FILE=$(PROFILE_GD_PREFIX)/hum-disease-$(REF_SOURCE)-profiles.txt >>$@.tmp ;\
+	echo OUTPUT_FILE=$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt >>$@.tmp ;\
 	echo SPLIT_PREFIX=$(REF_PROFILE_PREFIX)/$(REF_SOURCE)-profile- >>$@.tmp  ;\
 	echo SPLIT_SUFFIX=txt  >>$@.tmp  ;\
 	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.tmp ;\
