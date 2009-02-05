@@ -66,12 +66,8 @@ $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.mk:	\
 	echo PROFILE_MERGE_COC_FILE1=$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt >> $@.tmp ;\
 	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.tmp ; \
 	echo PROFILE_REVERSED_INPUT=  >> $@.tmp ; \
-#	echo FILTER_PAT=$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt  >> $@.tmp ;\
-#	echo FILTERED_OUTPUT_FILE=$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt  >> $@.tmp ;\
-#	echo FILTER_CMD=python $(DIRECT_GD_PREDICT)/filter_file.py >> $@.tmp ;\
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.tmp 
 	mv $@.tmp $@
-
 
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt: \
 		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt
@@ -104,9 +100,6 @@ $(DIRECT_GD_PREFIX)/all-comesh-p.mk:	\
 	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.tmp ;\
 	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.tmp ;\
 	echo PROFILE_REVERSED_INPUT=-r >> $@.tmp ;\
-#	echo FILTER_PAT=$(DIRECT_GD_PREFIX)/mesh-disease.txt >> $@.tmp;\
-#	echo FILTERED_OUTPUT_FILE=$(DIRECT_GD_PREFIX)/disease-comesh-p.txt  >> $@.tmp ;\
-#	echo FILTER_CMD=python $(DIRECT_GD_PREDICT)/filter_file.py  >> $@.tmp ;\
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk  >> $@.tmp
 	mv $@.tmp $@
 
