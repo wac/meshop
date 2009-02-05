@@ -51,6 +51,15 @@ include $(PROFILE_GD_PREDICT)/profile_gd_predict.mk
 # Directory for very large temporary files
 BIGTMP_DIR=./tmp
 
+# Set TaxonID based on TAXON_NAME
+ifeq "$(TAXON_NAME)" "hum"
+TAXON_ID=9606
+endif
+
+ifeq "$(TAXON_NAME)" "mus"
+TAXON_ID=10090
+endif
+
 # clean
 clean:	mesh_parse_clean gene_parse_clean pubmed_parse_clean
 	-rm $(BIGTMP_DIR)/*

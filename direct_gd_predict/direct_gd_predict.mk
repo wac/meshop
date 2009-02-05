@@ -26,6 +26,18 @@ direct_gd_predict_clean:
 	rm -f $(DIRECT_GD_PREFIX)/*.txt
 	rm -f $(DIRECT_GD_PREFIX)/*.txt.tmp
 
+#$(DIRECT_GD_PREFIX)/hum-gene.txt:  $(GENE_PREFIX)/load_gene.txt
+#	echo "SELECT gene_id from gene WHERE taxon_id=9606" | $(SQL_CMD) > $@.tmp
+#	mv $@.tmp $@
+
+#$(DIRECT_GD_PREFIX)/mus-gene.txt:  $(GENE_PREFIX)/load_gene.txt
+#	echo "SELECT gene_id from gene WHERE taxon_id=10090" | $(SQL_CMD) > $@.tmp
+#	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt:  $(GENE_PREFIX)/load_gene.txt
+	echo "SELECT gene_id from gene WHERE taxon_id=$(TAXON_ID)" | $(SQL_CMD) > $@.tmp
+	mv $@.tmp $@
+
 
 # Get around query size limitations by doing the sorting/counting outside the DB
 $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt:	\
@@ -44,7 +56,7 @@ $(DIRECT_GD_PREFIX)/all-mesh-refs.txt:	\
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene-$(REF_SOURCE)-mesh-refs.txt: \
 		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt \
 		$(DIRECT_GD_PREDICT)/filter_file.py
-	echo "SELECT pmid FROM $(REF_SOURCE), gene where $(REF_SOURCE).gene_id=gene.gene_id AND gene.taxon_id=9606" | $(SQL_CMD) | tail -n +2 | $(BIGSORT) | uniq > $@.tmp1
+	echo "SELECT pmid FROM $(REF_SOURCE), gene where $(REF_SOURCE).gene_id=gene.gene_id AND gene.taxon_id=$(TAXON_ID)" | $(SQL_CMD) | tail -n +2 | $(BIGSORT) | uniq > $@.tmp1
 	cat $< | python $(DIRECT_GD_PREDICT)/filter_file.py --field 2 $@.tmp1 | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@ # ; rm $@.tmp1
 
@@ -133,10 +145,4 @@ $(DIRECT_GD_PREFIX)/mesh-disease.txt:	$(MESH_PREFIX)/load-mesh-tree.txt
 	echo "SELECT term from mesh_tree WHERE tree_num LIKE 'C%'" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp
 	mv $@.tmp $@
 
-$(DIRECT_GD_PREFIX)/hum-gene.txt:  $(GENE_PREFIX)/load_gene.txt
-	echo "SELECT gene_id from gene WHERE taxon_id=9606" | $(SQL_CMD) > $@.tmp
-	mv $@.tmp $@
 
-$(DIRECT_GD_PREFIX)/mus-gene.txt:  $(GENE_PREFIX)/load_gene.txt
-	echo "SELECT gene_id from gene WHERE taxon_id=10090" | $(SQL_CMD) > $@.tmp
-	mv $@.tmp $@
