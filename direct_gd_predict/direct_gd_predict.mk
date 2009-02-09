@@ -106,11 +106,6 @@ $(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt:
 $(DIRECT_GD_PREFIX)/disease-mesh-refs.txt: \
 		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt \
 		$(DIRECT_GD_PREDICT)/filter_file.py 
-#		$(PUBMED_MESH_TXT)
-#		$(PM_MESH_PREFIX)/load-mesh.txt
-#	echo "SELECT pmid FROM pubmed_mesh_parent WHERE mesh_parent='Disease'" | $(SQL_CMD) | tail -n +2 | $(BIGSORT) | uniq > $@.tmp1
-#	cat $(PM_MESH_PREFIX)/*.mesh.txt | python $(DIRECT_GD_PREDICT)/filter_file.py --field 1 $(DIRECT_GD_PREFIX)/mesh-disease.txt | cut -d "|" -f 1 | uniq > $@.tmp1
-#	cat $(PUBMED_MESH_TXT) | python $(DIRECT_GD_PREDICT)/filter_file.py --field 1 $(DIRECT_GD_PREFIX)/mesh-disease.txt | cut -d "|" -f 1 | uniq > $@.tmp1
 	cat $(PM_MESH_PARENT_PREFIX)/mesh-parent.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/mesh-disease.txt | cut -d "|" -f 2 | uniq > $@.tmp1
 	cat $@.tmp1 | wc --lines > $(DIRECT_GD_PREFIX)/disease-mesh-count.txt
 	cat $< | python $(DIRECT_GD_PREDICT)/filter_file.py --field 1 $@.tmp1 | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp
