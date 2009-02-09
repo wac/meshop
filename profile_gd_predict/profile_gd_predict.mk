@@ -16,7 +16,7 @@ $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt: \
 		$(PROFILE_GD_PREDICT)/cmp-profile.py \
 		$(PROFILE_GD_PREDICT)/cmp-profile.mk \
 		$(PROFILE_GD_PREDICT)/split-gene-profiles.py \
-		$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.mk
+		$(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.mk
 	$(MAKE) -f $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.mk split
 	$(MAKE) -f $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.mk result
 	$(MAKE) -f $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.mk cleanup
