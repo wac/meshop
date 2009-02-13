@@ -26,7 +26,7 @@ $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.mk: \
 	echo PROFILE1_DATA=$(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt > $@.tmp;\
 	echo PROFILE2_DATA=$(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt >> $@.tmp;\
 	echo PROFILE1_SPLIT_PY=$(PROFILE_GD_PREDICT)/split-gene-profiles.py >> $@.tmp ;\
-	echo OUTPUT_FILE=$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt >>$@.tmp ;\
+	echo OUTPUT_FILE=$(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt >>$@.tmp ;\
 	echo SPLIT_PREFIX=$(BG_REF_PROFILE_PREFIX)/$(REF_SOURCE)-profile- >>$@.tmp  ;\
 	echo SPLIT_SUFFIX=txt  >>$@.tmp  ;\
 	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.tmp ;\
