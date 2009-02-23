@@ -37,7 +37,7 @@ direct_gd_predict_clean:
 #	mv $@.tmp $@
 
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt:  $(GENE_PREFIX)/load_gene.txt
-	echo "SELECT gene_id from gene WHERE taxon_id=$(TAXON_ID)" | $(SQL_CMD) > $@.tmp
+	echo "SELECT gene_id from gene WHERE taxon_id=$(TAXON_ID)" | $(SQL_CMD) | tail -n +2  > $@.tmp
 	mv $@.tmp $@
 
 

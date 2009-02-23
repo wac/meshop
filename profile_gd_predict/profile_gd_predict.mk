@@ -3,7 +3,8 @@
 # disease-mesh profiles
 
 profile_gd_predict: 	$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt \
-			$(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt
+			$(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt \
+			$(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-profiles.txt
 
 profile_gd_predict_clean: 
 
@@ -55,6 +56,25 @@ $(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.mk: \
 	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.tmp ;\
 	echo include $(PROFILE_GD_PREDICT)/cmp-profile.mk >>$@.tmp  
 	mv $@.tmp $@
+
+# Gene-Gene
+
+$(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-profiles.txt: \
+		$(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
+		$(PROFILE_GD_PREDICT)/cmp-profile.py \
+		$(PROFILE_GD_PREDICT)/cmp-profile.mk \
+		$(PROFILE_GD_PREDICT)/split-gene-profiles.py
+	echo PROFILE1_DATA=$(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt > $@.mk;\
+	echo PROFILE2_DATA=$(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt >> $@.mk;\
+	echo PROFILE1_SPLIT_PY=$(PROFILE_GD_PREDICT)/split-gene-profiles.py >> $@.mk ;\
+	echo OUTPUT_FILE=$(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-profiles.txt >>$@.mk ;\
+	echo SPLIT_PREFIX=$(BG_REF_PROFILE_PREFIX)/$(REF_SOURCE)-profile- >>$@.mk  ;\
+	echo SPLIT_SUFFIX=txt  >>$@.mk  ;\
+	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.mk ;\
+	echo include $(PROFILE_GD_PREDICT)/cmp-profile.mk >> $@.mk
+	$(MAKE) -f $@.mk split
+	$(MAKE) -f $@.mk result
+	$(MAKE) -f $@.mk cleanup
 
 # Need p-values for comesh profiles
 # Use the same file as for disease?
