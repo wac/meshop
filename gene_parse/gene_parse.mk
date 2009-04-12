@@ -18,20 +18,20 @@ $(GENE_PREFIX)/parsed_basic_rif.txt: $(GENE_DIR)/GeneRIF/generifs_basic.gz \
 	mv -f $@.tmp $@
 
 $(GENE_PREFIX)/load_gene.txt:	$(GENE_PARSE)/gene_tables.sql $(GENE_PREFIX)/gene_info
+	echo "DROP TABLE IF EXISTS gene" | $(SQL_CMD)
 	cat $(GENE_PARSE)/gene_tables.sql | $(SQL_CMD)
-	echo "DELETE FROM gene" | $(SQL_CMD)
 	echo "LOAD DATA LOCAL INFILE '$(GENE_PREFIX)/gene_info' INTO TABLE gene IGNORE 1 lines (taxon_id, gene_id, locus);" | $(SQL_CMD) > $@.tmp
 	mv -f $@.tmp $@
 
 $(GENE_PREFIX)/load_gene2pubmed.txt:	$(GENE_PARSE)/gene_tables.sql $(GENE_PREFIX)/gene2pubmed
+	echo "DROP TABLE IF EXISTS gene2pubmed" | $(SQL_CMD)
 	cat $(GENE_PARSE)/gene_tables.sql | $(SQL_CMD)
-	echo "DELETE FROM gene2pubmed" | $(SQL_CMD)
 	echo "LOAD DATA LOCAL INFILE '$(GENE_PREFIX)/gene2pubmed' INTO TABLE gene2pubmed IGNORE 1 lines (@dummy, gene_id, pmid);" | $(SQL_CMD) > $@.tmp
 	mv -f $@.tmp $@
 
 $(GENE_PREFIX)/load_generif.txt:	$(GENE_PARSE)/gene_tables.sql $(GENE_PREFIX)/parsed_basic_rif.txt
+	echo "DROP TABLE IF EXISTS generif" | $(SQL_CMD)
 	cat $(GENE_PARSE)/gene_tables.sql | $(SQL_CMD)
-	echo "DELETE FROM generif" | $(SQL_CMD)
 	echo "LOAD DATA LOCAL INFILE '$(GENE_PREFIX)/parsed_basic_rif.txt' INTO TABLE generif IGNORE 1 lines (gene_id, pmid, description);" | $(SQL_CMD) > $@.tmp
 	mv -f $@.tmp $@
 
