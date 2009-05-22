@@ -23,3 +23,12 @@ CREATE TABLE IF NOT EXISTS gene2pubmed
 	PRIMARY KEY(gene_id,  pmid)
 ) TYPE=INNODB;
 
+CREATE TABLE IF NOT EXISTS gene2refseq
+(
+	gene_id INT,
+	gi VARCHAR(128),
+	gi_startpos INT,
+	gi_endpos INT,
+	PRIMARY KEY(gene_id,  pmid)
+) TYPE=INNODB;
+

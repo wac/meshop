@@ -2,10 +2,16 @@ gene_parse:	$(GENE_PREFIX)/gene_info $(GENE_PREFIX)/gene2pubmed \
 		$(GENE_PREFIX)/parsed_basic_rif.txt \
 		$(GENE_PREFIX)/load_gene.txt \
 		$(GENE_PREFIX)/load_gene2pubmed.txt \
-		$(GENE_PREFIX)/load_generif.txt
+		$(GENE_PREFIX)/load_generif.txt \
+		$(GENE_PREFIX)/gene2refseq
+
 
 $(GENE_PREFIX)/gene_info: $(GENE_DIR)/DATA/gene_info.gz
 	zcat $(GENE_DIR)/DATA/gene_info.gz > $@.tmp
+	mv -f $@.tmp $@
+
+$(GENE_PREFIX)/gene2refseq: $(GENE_DIR)/DATA/gene2refseq.gz
+	zcat $< > $@.tmp
 	mv -f $@.tmp $@
 
 $(GENE_PREFIX)/gene2pubmed: $(GENE_DIR)/DATA/gene2pubmed.gz
