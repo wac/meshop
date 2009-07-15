@@ -3,6 +3,7 @@ import sys
 
 n = 0
 i = 0
+j = 0
 file=sys.stdin
 
 if len(sys.argv) < 2:
@@ -14,8 +15,14 @@ score=sys.argv[1]
 
 for line in file:
 	n = n + 1
-	if score >= line:
+	if score > line:
 		i = i + 1
+	if score < line:
+		j = j + 1
 
+print "score greater than" 
 print float(i)/float(n)
 print i, "/", n
+print "score less than" 
+print float(j)/float(n)
+print j, "/", n
