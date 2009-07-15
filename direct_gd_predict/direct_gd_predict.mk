@@ -22,7 +22,8 @@ direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/all-comesh-p.txt \
 		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene-$(REF_SOURCE)-mesh-refs.txt \
 		$(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
-		$(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt
+		$(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt \
+		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt
 
 direct_gd_predict_clean: 
 	rm -f $(DIRECT_GD_PREFIX)/*.txt
@@ -196,4 +197,12 @@ $(DIRECT_GD_PREFIX)/all-comesh-p.txt:
 
 $(DIRECT_GD_PREFIX)/mesh-disease.txt:	$(MESH_PREFIX)/load-mesh-tree.txt
 	echo "SELECT term from mesh_tree WHERE tree_num LIKE 'C%'" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp
+	mv $@.tmp $@
+
+# REF_SOURCE stats for validation 
+$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt:	\
+		$(GENE_PREFIX)/load_gene.txt \
+		$(GENE_PREFIX)/load_$(REF_SOURCE).txt \
+		$(PUBMED_PREFIX)/titles/load-titles.txt
+	echo "SELECT gene.gene_id, MIN(pubyear) AS oldest_year, COUNT(DISTINCT pmid) AS refs FROM gene, $(REF_SOURCE), pubmed WHERE gene.gene_id=$(REF_SOURCE).gene_id AND gene.taxon_id=$(TAXON_ID) AND $(REF_SOURCE).pmid=pubmed.pmid GROUP BY gene_id" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp
 	mv $@.tmp $@

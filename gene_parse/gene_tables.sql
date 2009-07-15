@@ -29,6 +29,6 @@ CREATE TABLE IF NOT EXISTS gene2refseq
 	gi VARCHAR(128),
 	gi_startpos INT,
 	gi_endpos INT,
-	PRIMARY KEY(gene_id,  pmid)
+	PRIMARY KEY(gene_id, gi)
 ) TYPE=INNODB;
 
