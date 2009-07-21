@@ -33,6 +33,8 @@ SHARE_PYTHON=./share/python
 default:  mesh_parse gene_parse pubmed_parse direct_gd_predict \
 		profile_gd_predict
 
+UTIL=./util
+
 MESH_PARSE=./mesh_parse
 include $(MESH_PARSE)/mesh_parse.mk
 

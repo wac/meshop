@@ -23,7 +23,10 @@ direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene-$(REF_SOURCE)-mesh-refs.txt \
 		$(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt \
-		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt
+		$(DIRECT_GD_PREFIX)/nr-disease-comesh-p.txt \
+		$(DIRECT_GD_PREFIX)/nr-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt
+#		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt \
+
 
 direct_gd_predict_clean: 
 	rm -f $(DIRECT_GD_PREFIX)/*.txt
@@ -141,6 +144,13 @@ $(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt:	\
 	$(MAKE) -f $@.mk cleanup
 
 # All gene mesh reference & p value computation Makefile
+$(DIRECT_GD_PREFIX)/nr-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
+		$(MESH_PREFIX)/mesh-child.txt \
+		$(UTIL)/filter-leaf.py
+	cat $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt | python $(UTIL)/filter-leaf.py $(MESH_PREFIX)/mesh-child.txt > $@.tmp
+	mv $@.tmp $@ 
+
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt: \
 		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt
 	cat $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt > $@.tmp
@@ -167,6 +177,14 @@ $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt: \
 	$(MAKE) -f $@.mk split
 	$(MAKE) -f $@.mk result 
 	$(MAKE) -f $@.mk cleanup
+
+$(DIRECT_GD_PREFIX)/nr-disease-comesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/disease-comesh-p.txt \
+		$(MESH_PREFIX)/mesh-child.txt \
+		$(UTIL)/filter-leaf.py
+	cat $(DIRECT_GD_PREFIX)/disease-comesh-p.txt | python $(UTIL)/filter-leaf.py $(MESH_PREFIX)/mesh-child.txt > $@.tmp
+	mv $@.tmp $@
+
 
 $(DIRECT_GD_PREFIX)/disease-comesh-p.txt: \
 		$(DIRECT_GD_PREFIX)/all-comesh-p.txt
