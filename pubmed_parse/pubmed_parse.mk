@@ -101,7 +101,7 @@ $(PM_COMESH_PREFIX)/comesh-total.txt: $(PUBMED_COMESH_TXT)
 $(PM_TITLES_PREFIX)/load-titles.txt: $(PUBMED_TITLES_TXT)
 	echo "DROP TABLE IF EXISTS pubmed" | $(SQL_CMD)
 	cat $(PUBMED_PARSE)/pubmed_tables.sql | $(SQL_CMD)
-	for file in $(PUBMED_TITLES_TXT); do echo "LOAD DATA LOCAL INFILE '$$file' INTO TABLE pubmed FIELDS TERMINATED by '|' IGNORE 1 LINES" | $(SQL_CMD); done
+	for file in $(PUBMED_TITLES_TXT); do echo "LOAD DATA LOCAL INFILE '$$file' INTO TABLE pubmed FIELDS TERMINATED by '|'" | $(SQL_CMD); done
 	echo "SELECT COUNT(*) FROM pubmed;" | $(SQL_CMD) | tail -n +2 > $@
 
 $(PM_CHEM_PREFIX)/load-chem.txt: $(PUBMED_CHEM_TXT)
