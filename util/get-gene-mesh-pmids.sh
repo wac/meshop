@@ -1,3 +1,7 @@
+# Set REF_SOURCE to gene2pubmed or generif
+# pass in as first parameter mesh term 
+# pass in via stdin geneIDs to test, one per line
+
 REF_SOURCE=gene2pubmed
 SQL_CMD="mysql-dbrc wcdb3"
 MESHTERM=$1

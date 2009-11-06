@@ -1,3 +1,7 @@
+# REF_SOURCE set to gene2pubmed or generif
+# first arg:  Filename of file with list of MeSH terms
+# second arg:  Filename of file with list of Entrez Gene IDs
+
 REF_SOURCE=gene2pubmed
 SQL_CMD="mysql-dbrc wcdb3"
 
