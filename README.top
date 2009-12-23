@@ -1,3 +1,10 @@
+Quick Start
+
+1. Unpack source files into directory (or clone the git repository)
+2. Copy ./config.default.mk to ./config.mk
+3. Edit ./config.mk to point to pubmed and Entrez files
+4. Make a subdirectory ./tmp/ if it does not exist
+
 Top level README file
 
 List of directory contents
