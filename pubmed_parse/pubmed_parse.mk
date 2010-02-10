@@ -64,6 +64,10 @@ pubmed_parse_clean:
 	rm -f $(PM_CHEM_PREFIX)/*.chem.txt
 	rm -f $(PM_MESH_PARENT_PREFIX)/*.mesh-parent.txt
 	rm -f $(PM_COMESH_PREFIX)/*.comesh.txt
+	rm -f $(PM_COMESH_PREFIX)/comesh-total.txt 
+	rm -f $(PM_TITLES_PREFIX)/load-titles.txt $(PM_CHEM_PREFIX)/load-chem.txt
+	rm -f $(PM_MESH_PREFIX)/load-mesh.txt $(PM_AUTHOR_PREFIX)/load-author.txt 
+	rm -f $(PM_MESH_PARENT_PREFIX)/load-mesh-parent.txt
 
 $(PM_TITLES_PREFIX)/%.titles.txt: $(PUBMED_XML)/%.xml.gz \
 		$(PUBMED_PARSE)/pubmed-baseline-titles.xsl

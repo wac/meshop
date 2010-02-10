@@ -84,4 +84,4 @@ gene_parse_clean:
 	rm -f $(GENE_PREFIX)/load_gene.txt 
 	rm -f $(GENE_PREFIX)/load_gene2pubmed.txt 
 	rm -f $(GENE_PREFIX)/load_generif.txt
-
+	rm -f $(GENE_PREFIX)/gene2refseq
