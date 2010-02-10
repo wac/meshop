@@ -25,6 +25,7 @@ PUBMED_PREFIX=$(TXT_PREFIX)/pubmed
 GENE_PREFIX=$(TXT_PREFIX)/gene
 DIRECT_GD_PREFIX=$(TXT_PREFIX)/direct_gene_disease
 PROFILE_GD_PREFIX=$(TXT_PREFIX)/profile_gene_disease
+SQL_PREFIX=$(TXT_PREFIX)/sql
 
 ####### Shared resources
 SHARE_PYTHON=./share/python
@@ -32,6 +33,8 @@ SHARE_PYTHON=./share/python
 ####### Include subprojects here
 default:  mesh_parse gene_parse pubmed_parse direct_gd_predict \
 		profile_gd_predict
+
+load_db: gene_parse_db pubmed_parse_db mesh_parse_db
 
 UTIL=./util
 
