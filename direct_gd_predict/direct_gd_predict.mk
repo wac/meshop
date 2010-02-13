@@ -24,6 +24,7 @@ direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-disease-comesh-p.txt \
+		$(DIRECT_GD_PREFIX)/nr-diseaseBG-disease-comesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-all-$(REF_SOURCE)-gene-mesh-p.txt
@@ -199,6 +200,13 @@ $(DIRECT_GD_PREFIX)/nr-disease-comesh-p.txt: \
 		$(MESH_PREFIX)/mesh-child.txt \
 		$(UTIL)/filter-leaf.py
 	cat $(DIRECT_GD_PREFIX)/disease-comesh-p.txt | python $(UTIL)/filter-leaf.py $(MESH_PREFIX)/mesh-child.txt > $@.tmp
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/nr-diseaseBG-disease-comesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt \
+		$(MESH_PREFIX)/mesh-child.txt \
+		$(UTIL)/filter-leaf.py
+	cat $(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt | python $(UTIL)/filter-leaf.py $(MESH_PREFIX)/mesh-child.txt > $@.tmp
 	mv $@.tmp $@
 
 
