@@ -27,8 +27,8 @@ direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/nr-diseaseBG-disease-comesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
-		$(DIRECT_GD_PREFIX)/nr-all-$(REF_SOURCE)-gene-mesh-p.txt
-		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt \
+		$(DIRECT_GD_PREFIX)/nr-all-$(REF_SOURCE)-gene-mesh-p.txt \
+		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt 
 
 
 direct_gd_predict_clean: 
@@ -241,7 +241,7 @@ $(DIRECT_GD_PREFIX)/mesh-disease.txt:	$(MESH_PREFIX)/load-mesh-tree.txt
 	mv $@.tmp $@
 
 # REF_SOURCE stats for validation 
-$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt:	\
+$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt: \
 		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt \
 		$(GENE_PREFIX)/load_$(REF_SOURCE).txt \
 		$(DIRECT_GD_PREDICT)/get_gene_stats.sh \
