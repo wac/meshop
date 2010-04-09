@@ -75,7 +75,8 @@ $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene-$(REF_SOURCE)-count.txt: \
 
 # hum gene-mesh (no p values)
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh.txt: \
-		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt
+		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
+		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt
 	cat $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt > $@.tmp
 	mv $@.tmp $@
 
@@ -168,7 +169,8 @@ $(DIRECT_GD_PREFIX)/nr-$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.t
 	mv $@.tmp $@ 
 
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt: \
-		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt
+		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt \
+		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt
 	cat $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt > $@.tmp
 	mv $@.tmp $@
 
