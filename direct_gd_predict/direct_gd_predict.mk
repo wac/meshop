@@ -43,16 +43,16 @@ direct_gd_predict_clean:
 #	echo "SELECT gene_id from gene WHERE taxon_id=10090" | $(SQL_CMD) > $@.tmp
 #	mv $@.tmp $@
 
-$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt:  $(GENE_PREFIX)/load_gene.txt
+$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt:  $(SQL_PREFIX)/load_gene.txt
 	echo "SELECT gene_id from gene WHERE taxon_id=$(TAXON_ID)" | $(SQL_CMD) | tail -n +2  > $@.tmp
 	mv $@.tmp $@
 
 
 # Get around query size limitations by doing the sorting/counting outside the DB
 $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt:	\
-		$(PM_MESH_PARENT_PREFIX)/load-mesh-parent.txt \
-		$(GENE_PREFIX)/load_gene.txt \
-		$(GENE_PREFIX)/load_$(REF_SOURCE).txt
+		$(SQL_PREFIX)/load-mesh-parent.txt \
+		$(SQL_PREFIX)/load_gene.txt \
+		$(SQL_PREFIX)/load_$(REF_SOURCE).txt
 	echo "SELECT gene.gene_id, mesh_parent, $(REF_SOURCE).pmid FROM $(REF_SOURCE), gene, pubmed_mesh_parent WHERE gene.gene_id=$(REF_SOURCE).gene_id AND $(REF_SOURCE).pmid=pubmed_mesh_parent.pmid;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,2 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@
 
@@ -90,7 +90,7 @@ $(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt:
 		$(DIRECT_GD_PREDICT)/filter_file.py \
 		$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt \
 		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh.txt \
-		$(PM_TITLES_PREFIX)/load-titles.txt
+		$(SQL_PREFIX)/load-titles.txt
 	echo PROFILE_INPUT_DATA=$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh.txt > $@.mk ; \
 	echo PROFILE_OUTPUT_FILE=$(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt >> $@.mk ; \
 	echo PROFILE_PHYPER_TOTAL=`cat $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene-$(REF_SOURCE)-count.txt` >> $@.mk ; \
@@ -131,7 +131,7 @@ $(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt:	\
 		$(DIRECT_GD_PREDICT)/filter_file.py \
 		$(DIRECT_GD_PREFIX)/all-mesh-refs.txt \
 		$(DIRECT_GD_PREFIX)/disease-mesh-refs.txt \
-		$(PM_TITLES_PREFIX)/load-titles.txt \
+		$(SQL_PREFIX)/load-titles.txt \
 		$(DIRECT_GD_PREFIX)/mesh-disease.txt
 	echo PROFILE_INPUT_DATA=$(DIRECT_GD_PREFIX)/disease-comesh-total.txt > $@.mk ; \
 	echo PROFILE_OUTPUT_FILE=$(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt >> $@.mk ; \
@@ -182,10 +182,10 @@ $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt: \
 		$(DIRECT_GD_PREDICT)/filter_file.py \
 		$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt \
 		$(DIRECT_GD_PREFIX)/all-mesh-refs.txt \
-		$(PM_TITLES_PREFIX)/load-titles.txt
+		$(SQL_PREFIX)/load-titles.txt
 	echo PROFILE_INPUT_DATA=$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt > $@.mk ; \
 	echo PROFILE_OUTPUT_FILE=$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt >> $@.mk ; \
-	echo PROFILE_PHYPER_TOTAL=`cat $(PM_TITLES_PREFIX)/load-titles.txt` >> $@.mk ; \
+	echo PROFILE_PHYPER_TOTAL=`cat $(SQL_PREFIX)/load-titles.txt` >> $@.mk ; \
 	echo PROFILE_GETP=$(DIRECT_GD_PREDICT)/get_pval.R >> $@.mk ; \
 	echo PROFILE_MERGE_COC=$(DIRECT_GD_PREDICT)/merge_coc.py >> $@.mk ; \
 	echo PROFILE_MERGE_COC_FILE1=$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt >> $@.mk ;\
@@ -223,11 +223,11 @@ $(DIRECT_GD_PREFIX)/all-comesh-p.txt:
 		$(DIRECT_GD_PREDICT)/merge_coc.py \
 		$(DIRECT_GD_PREDICT)/filter_file.py \
 		$(DIRECT_GD_PREFIX)/all-mesh-refs.txt \
-		$(PM_TITLES_PREFIX)/load-titles.txt \
+		$(SQL_PREFIX)/load-titles.txt \
 		$(DIRECT_GD_PREFIX)/mesh-disease.txt
 	echo PROFILE_INPUT_DATA=$(PM_COMESH_PREFIX)/comesh-total.txt > $@.mk ; \
 	echo PROFILE_OUTPUT_FILE=$(DIRECT_GD_PREFIX)/all-comesh-p.txt >> $@.mk ; \
-	echo PROFILE_PHYPER_TOTAL=`cat $(PM_TITLES_PREFIX)/load-titles.txt` >> $@.mk ; \
+	echo PROFILE_PHYPER_TOTAL=`cat $(SQL_PREFIX)/load-titles.txt` >> $@.mk ; \
 	echo PROFILE_GETP=$(DIRECT_GD_PREDICT)/get_pval.R >> $@.mk ; \
 	echo PROFILE_MERGE_COC=$(DIRECT_GD_PREDICT)/merge_coc.py >> $@.mk ; \
 	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.mk ;\
@@ -238,16 +238,16 @@ $(DIRECT_GD_PREFIX)/all-comesh-p.txt:
 	$(MAKE) -f $@.mk result 
 	$(MAKE) -f $@.mk cleanup
 
-$(DIRECT_GD_PREFIX)/mesh-disease.txt:	$(MESH_PREFIX)/load-mesh-tree.txt
+$(DIRECT_GD_PREFIX)/mesh-disease.txt:	$(SQL_PREFIX)/load-mesh-tree.txt
 	echo "SELECT term from mesh_tree WHERE tree_num LIKE 'C%'" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp
 	mv $@.tmp $@
 
 # REF_SOURCE stats for validation 
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt: \
 		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt \
-		$(GENE_PREFIX)/load_$(REF_SOURCE).txt \
+		$(SQL_PREFIX)/load_$(REF_SOURCE).txt \
 		$(DIRECT_GD_PREDICT)/get_gene_stats.sh \
-		$(PUBMED_PREFIX)/titles/load-titles.txt
+		$(SQL_PREFIX)/load-titles.txt
 #	cat $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt | sh $(DIRECT_GD_PREDICT)/get_gene_stats.sh $(REF_SOURCE) "$(SQL_CMD)" > $@.tmp
 #	mv $@.tmp $@
 	echo "SELECT gene.gene_id, MIN(pubyear) AS oldest_year, COUNT(DISTINCT $(REF_SOURCE).pmid) AS refs FROM gene, $(REF_SOURCE), pubmed WHERE gene.gene_id=$(REF_SOURCE).gene_id AND gene.taxon_id=$(TAXON_ID) AND $(REF_SOURCE).pmid=pubmed.pmid GROUP BY gene_id" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp
