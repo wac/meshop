@@ -28,7 +28,7 @@ $(GENE_PREFIX)/parsed_basic_rif.txt: $(GENE_DIR)/GeneRIF/generifs_basic.gz \
 $(SQL_PREFIX)/load-gene.txt:	$(GENE_PARSE)/gene_tables.sql $(GENE_PREFIX)/gene_info
 	echo "DROP TABLE IF EXISTS gene" | $(SQL_CMD)
 	cat $(GENE_PARSE)/gene_tables.sql | $(SQL_CMD)
-	echo "LOAD DATA LOCAL INFILE '$(GENE_PREFIX)/gene_info' INTO TABLE gene IGNORE 1 lines (taxon_id, gene_id, locus);" | $(SQL_CMD) > $@.tmp
+	echo "LOAD DATA LOCAL INFILE '$(GENE_PREFIX)/gene_info' INTO TABLE gene IGNORE 1 lines (taxon_id, gene_id, locus, @IGNORE, @IGNORE, @IGNORE, chr);" | $(SQL_CMD) > $@.tmp
 	mv -f $@.tmp $@
 
 $(SQL_PREFIX)/load-gene2pubmed.txt:	$(GENE_PARSE)/gene_tables.sql $(GENE_PREFIX)/gene2pubmed

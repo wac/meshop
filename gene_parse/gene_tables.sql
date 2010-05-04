@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS gene
 (
 	gene_id INT PRIMARY KEY,
 	locus VARCHAR(64),
-	taxon_id INT
+	taxon_id INT,
+	chr VARCHAR(3)
 ) TYPE=INNODB;
 
 CREATE TABLE IF NOT EXISTS generif
