@@ -108,18 +108,41 @@ $(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt:
 # Direct parse from the pubmed-mesh
 $(DIRECT_GD_PREFIX)/disease-mesh-refs.txt: \
 		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt \
-		$(DIRECT_GD_PREDICT)/filter_file.py 
+		$(DIRECT_GD_PREDICT)/filter_file.py \
+		$(DIRECT_GD_PREFIX)/mesh-disease.txt
 	cat $(PM_MESH_PARENT_PREFIX)/mesh-parent.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/mesh-disease.txt | cut -d "|" -f 2 | uniq > $@.tmp1
 	cat $@.tmp1 | wc --lines > $(DIRECT_GD_PREFIX)/disease-mesh-count.txt
 	cat $< | python $(DIRECT_GD_PREDICT)/filter_file.py --field 1 $@.tmp1 | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@ ; rm $@.tmp1
 
+# Only disease-referenced pmids
+# Direct parse from the pubmed-mesh
+$(DIRECT_GD_PREFIX)/braindisease-mesh-refs.txt: \
+		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt \
+		$(DIRECT_GD_PREDICT)/filter_file.py \
+		$(DIRECT_GD_PREFIX)/mesh-braindisease.txt
+	cat $(PM_MESH_PARENT_PREFIX)/mesh-parent.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/mesh-braindisease.txt | cut -d "|" -f 2 | uniq > $@.tmp1
+	cat $@.tmp1 | wc --lines > $(DIRECT_GD_PREFIX)/braindisease-mesh-count.txt
+	cat $< | python $(DIRECT_GD_PREDICT)/filter_file.py --field 1 $@.tmp1 | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp
+	mv $@.tmp $@ ; rm $@.tmp1
+
+
 $(DIRECT_GD_PREFIX)/disease-mesh-count.txt: \
 		$(DIRECT_GD_PREFIX)/disease-mesh-refs.txt
 
+$(DIRECT_GD_PREFIX)/braindisease-mesh-count.txt: \
+		$(DIRECT_GD_PREFIX)/braindisease-mesh-refs.txt
+
 $(DIRECT_GD_PREFIX)/disease-comesh-total.txt: \
-		$(PM_COMESH_PREFIX)/comesh-total.txt
+		$(PM_COMESH_PREFIX)/comesh-total.txt \
+		$(DIRECT_GD_PREFIX)/mesh-disease.txt
 	cat $(PM_COMESH_PREFIX)/comesh-total.txt | python $(DIRECT_GD_PREDICT)/filter_file.py --field 1 $(DIRECT_GD_PREFIX)/mesh-disease.txt > $@.tmp
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/braindisease-comesh-total.txt: \
+		$(PM_COMESH_PREFIX)/comesh-total.txt \
+		$(DIRECT_GD_PREFIX)/mesh-braindisease.txt
+	cat $(PM_COMESH_PREFIX)/comesh-total.txt | python $(DIRECT_GD_PREDICT)/filter_file.py --field 1 $(DIRECT_GD_PREFIX)/mesh-braindisease.txt > $@.tmp
 	mv $@.tmp $@
 
 $(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt:	\
@@ -145,6 +168,38 @@ $(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt:	\
 	$(MAKE) -f $@.mk split
 	$(MAKE) -f $@.mk result 
 	$(MAKE) -f $@.mk cleanup
+
+$(DIRECT_GD_PREFIX)/braindiseaseBG-disease-comesh-p.txt:	\
+		$(DIRECT_GD_PREFIX)/braindisease-mesh-count.txt \
+		$(DIRECT_GD_PREFIX)/braindisease-comesh-total.txt \
+		$(DIRECT_GD_PREDICT)/get_pval.R \
+		$(DIRECT_GD_PREDICT)/get_pval.mk \
+		$(DIRECT_GD_PREDICT)/merge_coc.py \
+		$(DIRECT_GD_PREDICT)/filter_file.py \
+		$(DIRECT_GD_PREFIX)/all-mesh-refs.txt \
+		$(DIRECT_GD_PREFIX)/braindisease-mesh-refs.txt \
+		$(SQL_PREFIX)/load-titles.txt \
+		$(DIRECT_GD_PREFIX)/mesh-braindisease.txt
+	echo PROFILE_INPUT_DATA=$(DIRECT_GD_PREFIX)/braindisease-comesh-total.txt > $@.mk ; \
+	echo PROFILE_OUTPUT_FILE=$(DIRECT_GD_PREFIX)/braindiseaseBG-disease-comesh-p.txt >> $@.mk ; \
+	echo PROFILE_PHYPER_TOTAL=`cat $(DIRECT_GD_PREFIX)/braindisease-mesh-count.txt` >> $@.mk ; \
+	echo PROFILE_GETP=$(DIRECT_GD_PREDICT)/get_pval.R >> $@.mk ; \
+	echo PROFILE_MERGE_COC=$(DIRECT_GD_PREDICT)/merge_coc.py >> $@.mk ; \
+	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.mk ;\
+	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/braindisease-mesh-refs.txt >> $@.mk ;\
+	echo PROFILE_REVERSED_INPUT=-r >> $@.mk ;\
+	echo include $(DIRECT_GD_PREDICT)/get_pval.mk  >> $@.mk
+	$(MAKE) -f $@.mk split
+	$(MAKE) -f $@.mk result 
+	$(MAKE) -f $@.mk cleanup
+
+$(DIRECT_GD_PREFIX)/nr-braindiseaseBG-disease-comesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/braindiseaseBG-disease-comesh-p.txt \
+		$(MESH_PREFIX)/mesh-child.txt \
+		$(UTIL)/filter-leaf.py
+	cat $(DIRECT_GD_PREFIX)/braindiseaseBG-disease-comesh-p.txt | python $(UTIL)/filter-leaf.py $(MESH_PREFIX)/mesh-child.txt > $@.tmp
+	mv $@.tmp $@
+
 
 # All gene mesh reference & p value computation Makefile
 $(DIRECT_GD_PREFIX)/nr-all-$(REF_SOURCE)-gene-mesh-p.txt: \
@@ -240,6 +295,10 @@ $(DIRECT_GD_PREFIX)/all-comesh-p.txt: \
 
 $(DIRECT_GD_PREFIX)/mesh-disease.txt:	$(SQL_PREFIX)/load-mesh-tree.txt
 	echo "SELECT term from mesh_tree WHERE tree_num LIKE 'C%'" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/mesh-braindisease.txt:	$(SQL_PREFIX)/load-mesh-tree.txt
+	echo "SELECT term from mesh_tree WHERE tree_num LIKE 'C10.228.140.%'" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp
 	mv $@.tmp $@
 
 # REF_SOURCE stats for validation 
