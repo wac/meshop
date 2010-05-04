@@ -35,15 +35,15 @@ direct_gd_predict_clean:
 	rm -f $(DIRECT_GD_PREFIX)/*.txt
 	rm -f $(DIRECT_GD_PREFIX)/*.txt.tmp
 
-#$(DIRECT_GD_PREFIX)/hum-gene.txt:  $(GENE_PREFIX)/load_gene.txt
+#$(DIRECT_GD_PREFIX)/hum-gene.txt:  $(GENE_PREFIX)/load-gene.txt
 #	echo "SELECT gene_id from gene WHERE taxon_id=9606" | $(SQL_CMD) > $@.tmp
 #	mv $@.tmp $@
 
-#$(DIRECT_GD_PREFIX)/mus-gene.txt:  $(GENE_PREFIX)/load_gene.txt
+#$(DIRECT_GD_PREFIX)/mus-gene.txt:  $(GENE_PREFIX)/load-gene.txt
 #	echo "SELECT gene_id from gene WHERE taxon_id=10090" | $(SQL_CMD) > $@.tmp
 #	mv $@.tmp $@
 
-$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt:  $(SQL_PREFIX)/load_gene.txt
+$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt:  $(SQL_PREFIX)/load-gene.txt
 	echo "SELECT gene_id from gene WHERE taxon_id=$(TAXON_ID)" | $(SQL_CMD) | tail -n +2  > $@.tmp
 	mv $@.tmp $@
 
@@ -51,8 +51,8 @@ $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt:  $(SQL_PREFIX)/load_gene.txt
 # Get around query size limitations by doing the sorting/counting outside the DB
 $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt:	\
 		$(SQL_PREFIX)/load-mesh-parent.txt \
-		$(SQL_PREFIX)/load_gene.txt \
-		$(SQL_PREFIX)/load_$(REF_SOURCE).txt
+		$(SQL_PREFIX)/load-gene.txt \
+		$(SQL_PREFIX)/load-$(REF_SOURCE).txt
 	echo "SELECT gene.gene_id, mesh_parent, $(REF_SOURCE).pmid FROM $(REF_SOURCE), gene, pubmed_mesh_parent WHERE gene.gene_id=$(REF_SOURCE).gene_id AND $(REF_SOURCE).pmid=pubmed_mesh_parent.pmid;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,2 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@
 
@@ -216,7 +216,7 @@ $(DIRECT_GD_PREFIX)/disease-comesh-p.txt: \
 	cat  $(DIRECT_GD_PREFIX)/all-comesh-p.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/mesh-disease.txt > $@.tmp
 	mv $@.tmp $@
 
-$(DIRECT_GD_PREFIX)/all-comesh-p.txt:
+$(DIRECT_GD_PREFIX)/all-comesh-p.txt: \
 		$(PM_COMESH_PREFIX)/comesh-total.txt \
 		$(DIRECT_GD_PREDICT)/get_pval.R \
 		$(DIRECT_GD_PREDICT)/get_pval.mk \
@@ -245,7 +245,7 @@ $(DIRECT_GD_PREFIX)/mesh-disease.txt:	$(SQL_PREFIX)/load-mesh-tree.txt
 # REF_SOURCE stats for validation 
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt: \
 		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt \
-		$(SQL_PREFIX)/load_$(REF_SOURCE).txt \
+		$(SQL_PREFIX)/load-$(REF_SOURCE).txt \
 		$(DIRECT_GD_PREDICT)/get_gene_stats.sh \
 		$(SQL_PREFIX)/load-titles.txt
 #	cat $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt | sh $(DIRECT_GD_PREDICT)/get_gene_stats.sh $(REF_SOURCE) "$(SQL_CMD)" > $@.tmp
