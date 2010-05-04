@@ -8,7 +8,9 @@ gene_mesh<-read.table(infile, sep="|", quote="")
 gene_mesh[1,]
 
 # Computing p-values
-gene_mesh.p<-phyper(gene_mesh[,3], gene_mesh[,5], gene_mesh[,6], gene_mesh[,4], lower.tail=FALSE)
+# we want the P[x >= X],  which is lower.tail=FALSE P[x > X] +
+# the density at X P[x = X]
+gene_mesh.p<-phyper(gene_mesh[,3], gene_mesh[,5], gene_mesh[,6], gene_mesh[,4], lower.tail=FALSE) + dhyper(gene <- mesh[,3], gene <- mesh[,5], gene <- mesh[,6], gene <- mesh[,4], lower.tail=FALSE)
 
 # Add the column
 gene_mesh_all <- cbind(gene_mesh, gene_mesh.p)
