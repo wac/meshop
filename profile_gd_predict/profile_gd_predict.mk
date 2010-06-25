@@ -5,9 +5,12 @@
 profile_gd_predict: 	$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt \
 			$(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt \
 			$(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-profiles.txt \
-$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-count.txt \
+			$(PROFILE_GD_PREFIX)/disease-disease-profiles.txt \
+			$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-count.txt \
                         $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-count.txt \
-                        $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-count.txt
+                        $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-count.txt \
+                        $(PROFILE_GD_PREFIX)/disease-disease-count.txt
+
 
 
 profile_gd_predict_clean: 
@@ -25,7 +28,7 @@ $(PROFILE_GD_PREFIX)/disease-disease-profiles.txt: \
 	echo PROFILE2_DATA=$(DIRECT_GD_PREFIX)/disease-comesh-p.txt >> $@.mk;\
 	echo PROFILE1_SPLIT_PY=$(PROFILE_GD_PREDICT)/split-gene-profiles.py >> $@.mk ;\
 	echo OUTPUT_FILE=$@ >>$@.mk ;\
-	echo SPLIT_PREFIX=$(BG_REF_PROFILE_PREFIX)/$(REF_SOURCE)-profile- >>$@.mk  ;\
+	echo SPLIT_PREFIX=$(DISEASE_PROFILE_PREFIX)/disease-profile- >>$@.mk  ;\
 	echo SPLIT_SUFFIX=txt  >>$@.mk  ;\
 	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.mk ;\
 	echo include $(PROFILE_GD_PREDICT)/cmp-profile.mk >>$@.mk
@@ -100,6 +103,10 @@ $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-count.txt: $(PROFILE
 	mv $@.tmp $@
 
 $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-count.txt: $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-profiles.txt
+	tail -n +2 $< | wc > $@.tmp
+	mv $@.tmp $@
+
+$(PROFILE_GD_PREFIX)/disease-disease-count.txt: $(PROFILE_GD_PREFIX)/disease-disease-profiles.txt
 	tail -n +2 $< | wc > $@.tmp
 	mv $@.tmp $@
 
