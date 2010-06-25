@@ -28,7 +28,9 @@ direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/nr-$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-all-$(REF_SOURCE)-gene-mesh-p.txt \
-		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt 
+		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt
+#		$(DIRECT_GD_PREFIX)/mesh-stats.txt 
+
 
 
 direct_gd_predict_clean: 
@@ -305,9 +307,13 @@ $(DIRECT_GD_PREFIX)/mesh-braindisease.txt:	$(SQL_PREFIX)/load-mesh-tree.txt
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt: \
 		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt \
 		$(SQL_PREFIX)/load-$(REF_SOURCE).txt \
-		$(DIRECT_GD_PREDICT)/get_gene_stats.sh \
 		$(SQL_PREFIX)/load-titles.txt
-#	cat $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt | sh $(DIRECT_GD_PREDICT)/get_gene_stats.sh $(REF_SOURCE) "$(SQL_CMD)" > $@.tmp
-#	mv $@.tmp $@
 	echo "SELECT gene.gene_id, MIN(pubyear) AS oldest_year, COUNT(DISTINCT $(REF_SOURCE).pmid) AS refs FROM gene, $(REF_SOURCE), pubmed WHERE gene.gene_id=$(REF_SOURCE).gene_id AND gene.taxon_id=$(TAXON_ID) AND $(REF_SOURCE).pmid=pubmed.pmid GROUP BY gene_id" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp
+	mv $@.tmp $@
+
+# MeSH stats for validation 
+$(DIRECT_GD_PREFIX)/mesh-stats.txt: \
+                $(SQL_PREFIX)/load-mesh-parent.txt \
+		$(SQL_PREFIX)/load-titles.txt
+	echo "SELECT mesh_parent, MIN(pubyear) AS oldest_year, COUNT(DISTINCT pubmed.pmid) AS refs FROM pubmed_mesh_parent, pubmed WHERE pubmed_mesh_parent.pmid=pubmed.pmid GROUP BY mesh_parent" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp
 	mv $@.tmp $@

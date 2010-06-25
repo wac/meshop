@@ -20,7 +20,9 @@ def usage():
     print "Total-count2 = n = number of black balls"
     print "p = p-value"
     print ""
-    print "Output format (disease|gene|I|U|L2_count|L2_count_Norm|L2_p|L2_logp|Intersect_L2_count_Norm|Intersect_L2_logp|sumdiff_logp|sum_logcombinedp|cosine_count_Norm|cosine_p)"
+    print "Output format (disease|gene|D|G|I|U|L2_count|L2_count_Norm|L2_p|L2_logp|Intersect_L2_count_Norm|Intersect_L2_logp|sumdiff_logp|sum_logcombinedp|cosine_count_Norm|cosine_p)"
+    print "D : number of disease terms"
+    print "G : number of gene terms"
     print "I : number of intersecting (common) terms"
     print "U : number of union (all) terms"
     print "L2_count:  L2 Distance,  raw term instances"
@@ -212,7 +214,7 @@ def process_dterm(currterm, dprofile_raw, dtotal, dprofile_pval, dprofile_tfidf)
             cosine_p = cosine_p/( cosine_p_gmag * cosine_p_dmag )
             cosine_tfidf = cosine_tfidf/( cosine_tfidf_gmag * cosine_tfidf_dmag )
 
-            print currterm+sep+currgene+sep+str(icount)+sep+str(ucount)+sep+str(pdist_raw)+sep+str(pdist_norm)+sep+str(pdist_pval)+sep+str(pdist_logpval)+sep+str(ipdist_norm)+sep+str(ipdist_logpval)+sep+str(sumdiff_logp)+sep+str(sum_logcombinedp)+sep+str(cosine_norm)+sep+str(cosine_p)+sep+str(cosine_tfidf)
+            print currterm+sep+currgene+sep+str(len(dprofile_raw))+sep+str(len(gprofile_raw))+sep+str(icount)+sep+str(ucount)+sep+str(pdist_raw)+sep+str(pdist_norm)+sep+str(pdist_pval)+sep+str(pdist_logpval)+sep+str(ipdist_norm)+sep+str(ipdist_logpval)+sep+str(sumdiff_logp)+sep+str(sum_logcombinedp)+sep+str(cosine_norm)+sep+str(cosine_p)+sep+str(cosine_tfidf)
             
             # Reset gene profile
             currgene=gene

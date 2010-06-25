@@ -10,6 +10,11 @@ def usage():
     print "Ouputs files <output prefix>-1.txt, <output prefix>-2.txt and so on"
     
 
+if len(sys.argv) <= 2:
+	usage()
+	exit(-1)
+
+
 sep='|'
 
 prefix=sys.argv[2]
