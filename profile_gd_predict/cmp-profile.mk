@@ -22,21 +22,21 @@ PROCESS_FILES=$(SPLIT_FILES:$(SPLIT_PREFIX)%.$(SPLIT_SUFFIX)=$(PROCESS_PREFIX)%.
 split:	$(SPLIT_PREFIX)done.dummy
 
 $(SPLIT_PREFIX)done.dummy:	$(PROFILE1_DATA)
-	rm -f $(SPLIT_PREFIX)*.$(SPLIT_SUFFIX)
-	rm -f $@
-	python $(PROFILE1_SPLIT_PY) $(PROFILE1_DATA) $(SPLIT_PREFIX)
+	rm -f $(SPLIT_PREFIX)*.$(SPLIT_SUFFIX) && \
+	rm -f $@ && \
+	python $(PROFILE1_SPLIT_PY) $(PROFILE1_DATA) $(SPLIT_PREFIX) && \
 	touch $@
 
 # Command to process the split files
 $(PROCESS_PREFIX)%.out: $(SPLIT_PREFIX)%.$(SPLIT_SUFFIX)
-	python $(CMP_PROFILE_PY) $(PROFILE2_DATA) $< > $@.tmp
+	python $(CMP_PROFILE_PY) $(PROFILE2_DATA) $< > $@.tmp && \
 	mv $@.tmp $@
 
 # Templates for the split/processed files
 
 $(OUTPUT_FILE): $(PROCESS_FILES)
-	ls $(PROCESS_PREFIX)*.out > $@.tmp1
-	xargs $(JOIN_CMD) > $@.tmp < $@.tmp1
+	ls $(PROCESS_PREFIX)*.out > $@.tmp1 && \
+	xargs $(JOIN_CMD) > $@.tmp < $@.tmp1 && \
 	mv $@.tmp $@ ; rm $@.tmp1
 
 result:  $(OUTPUT_FILE)
