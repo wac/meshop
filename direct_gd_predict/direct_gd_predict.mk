@@ -101,10 +101,9 @@ $(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt:
 	echo PROFILE_MERGE_COC_FILE1=$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt >> $@.mk && \
 	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene-$(REF_SOURCE)-mesh-refs.txt >> $@.mk && \
 	echo PROFILE_REVERSED_INPUT=  >> $@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.mk && \
-	$(MAKE) -f $@.mk split && \
-	$(MAKE) -f $@.mk result && \
-	$(MAKE) -f $@.mk cleanup
+	$(MAKE) -f $@.mk start
 
 # Only disease-referenced pmids
 # Direct parse from the pubmed-mesh
@@ -166,10 +165,9 @@ $(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt:	\
 	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.mk && \
 	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/disease-mesh-refs.txt >> $@.mk && \
 	echo PROFILE_REVERSED_INPUT=-r >> $@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk  >> $@.mk && \
-	$(MAKE) -f $@.mk split && \
-	$(MAKE) -f $@.mk result && \
-	$(MAKE) -f $@.mk cleanup
+	$(MAKE) -f $@.mk start
 
 $(DIRECT_GD_PREFIX)/braindiseaseBG-disease-comesh-p.txt:	\
 		$(DIRECT_GD_PREFIX)/braindisease-mesh-count.txt \
@@ -190,10 +188,9 @@ $(DIRECT_GD_PREFIX)/braindiseaseBG-disease-comesh-p.txt:	\
 	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.mk && \
 	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/braindisease-mesh-refs.txt >> $@.mk && \
 	echo PROFILE_REVERSED_INPUT=-r >> $@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk  >> $@.mk &&
-	$(MAKE) -f $@.mk split &&
-	$(MAKE) -f $@.mk result &&
-	$(MAKE) -f $@.mk cleanup
+	$(MAKE) -f $@.mk start
 
 $(DIRECT_GD_PREFIX)/nr-braindiseaseBG-disease-comesh-p.txt: \
 		$(DIRECT_GD_PREFIX)/braindiseaseBG-disease-comesh-p.txt \
@@ -248,10 +245,9 @@ $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt: \
 	echo PROFILE_MERGE_COC_FILE1=$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt >> $@.mk && \
 	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.mk && \
 	echo PROFILE_REVERSED_INPUT= >> $@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.mk && \
-	$(MAKE) -f $@.mk split && \
-	$(MAKE) -f $@.mk result && \
-	$(MAKE) -f $@.mk cleanup
+	$(MAKE) -f $@.mk start
 
 $(DIRECT_GD_PREFIX)/nr-disease-comesh-p.txt: \
 		$(DIRECT_GD_PREFIX)/disease-comesh-p.txt \
@@ -290,10 +286,9 @@ $(DIRECT_GD_PREFIX)/all-comesh-p.txt: \
 	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.mk && \
 	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.mk && \
 	echo PROFILE_REVERSED_INPUT=-r >> $@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk  >> $@.mk && \
-	$(MAKE) -f $@.mk split && \
-	$(MAKE) -f $@.mk result && \
-	$(MAKE) -f $@.mk cleanup 
+	$(MAKE) -f $@.mk start
 
 $(DIRECT_GD_PREFIX)/mesh-disease.txt:	$(SQL_PREFIX)/load-mesh-tree.txt
 	echo "SELECT term from mesh_tree WHERE tree_num LIKE 'C%'" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp && \

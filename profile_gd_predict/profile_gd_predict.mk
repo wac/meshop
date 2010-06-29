@@ -31,8 +31,9 @@ $(PROFILE_GD_PREFIX)/disease-disease-profiles.txt: \
 	echo SPLIT_PREFIX=$(DISEASE_PROFILE_PREFIX)/disease-profile- >>$@.mk && \
 	echo SPLIT_SUFFIX=txt  >>$@.mk && \
 	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(PROFILE_GD_PREDICT)/cmp-profile.mk >>$@.mk && \
-	$(MAKE) -f $@.mk split && $(MAKE) -f $@.mk result && $(MAKE) -f $@.mk cleanup
+	$(MAKE) -f $@.mk start
 
 
 $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt: \
@@ -48,8 +49,9 @@ $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt: \
 	echo SPLIT_PREFIX=$(BG_REF_PROFILE_PREFIX)/$(REF_SOURCE)-profile- >>$@.mk && \
 	echo SPLIT_SUFFIX=txt  >>$@.mk && \
 	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(PROFILE_GD_PREDICT)/cmp-profile.mk >>$@.mk && \
-	$(MAKE) -f $@.mk split && $(MAKE) -f $@.mk result && $(MAKE) -f $@.mk cleanup
+	$(MAKE) -f $@.mk start
 
 $(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt: \
 		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
@@ -64,8 +66,9 @@ $(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt: \
 	echo SPLIT_PREFIX=$(REF_PROFILE_PREFIX)/$(REF_SOURCE)-profile- >>$@.mk  && \
 	echo SPLIT_SUFFIX=txt  >>$@.mk  && \
 	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(PROFILE_GD_PREDICT)/cmp-profile.mk >>$@.mk && \
-	$(MAKE) -f $@.mk split && $(MAKE) -f $@.mk result && $(MAKE) -f $@.mk cleanup
+	$(MAKE) -f $@.mk start
 
 # Gene-Gene
 
@@ -81,8 +84,9 @@ $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-profiles.txt: \
 	echo SPLIT_PREFIX=$(BG_REF_PROFILE_PREFIX)/$(REF_SOURCE)-profile- >>$@.mk  && \
 	echo SPLIT_SUFFIX=txt  >>$@.mk  && \
 	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(PROFILE_GD_PREDICT)/cmp-profile.mk >> $@.mk && \
-	$(MAKE) -f $@.mk split && $(MAKE) -f $@.mk result && $(MAKE) -f $@.mk cleanup
+	$(MAKE) -f $@.mk start
 
 # Count
 

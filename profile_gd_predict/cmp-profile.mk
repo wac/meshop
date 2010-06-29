@@ -9,6 +9,9 @@
 # SPLIT_PREFIX=gene-profiles/gene-profile-
 # SPLIT_SUFFIX=txt
 
+# Name of the makefile for submake calls
+# SELF_MAKEFILE=
+
 # Command to join the processed files
 JOIN_CMD=cat
 
@@ -19,7 +22,8 @@ PROCESS_PREFIX=$(SPLIT_PREFIX)
 PROCESS_FILES=$(SPLIT_FILES:$(SPLIT_PREFIX)%.$(SPLIT_SUFFIX)=$(PROCESS_PREFIX)%.out)
 
 # Command to split the input file
-split:	$(SPLIT_PREFIX)done.dummy
+start:	$(SPLIT_PREFIX)done.dummy
+	$(MAKE) -f $(SELF_MAKEFILE) result
 
 $(SPLIT_PREFIX)done.dummy:	$(PROFILE1_DATA)
 	rm -f $(SPLIT_PREFIX)*.$(SPLIT_SUFFIX) && \
@@ -40,6 +44,7 @@ $(OUTPUT_FILE): $(PROCESS_FILES)
 	mv $@.tmp $@ ; rm $@.tmp1
 
 result:  $(OUTPUT_FILE)
+	$(MAKE) -f $(SELF_MAKEFILE) cleanup
 
 cleanup:
 	rm -f $(PROCESS_PREFIX)*.out
