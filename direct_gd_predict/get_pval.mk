@@ -16,6 +16,8 @@
 # PROFILE_MERGE_COC_FILE2=
 # Specify -r if the input has coc value before the fields
 # PROFILE_REVERSED_INPUT= 
+# Location of this Makefile
+# SELF_MAKEFILE=
 
 # Intermediate Datafile prefix
 SPLIT_PREFIX=$(PROFILE_OUTPUT_FILE).split
@@ -28,7 +30,10 @@ PROCESS_FILES=$(SPLIT_FILES:$(SPLIT_PREFIX).%.in=$(PROCESS_PREFIX).%.out)
 
 # Command to split the input file
 SPLIT_LINES=1000000
-split: $(SPLIT_PREFIX).done.dummy
+
+# start target will recursively invoke make to process and make the result
+start: $(SPLIT_PREFIX).done.dummy
+	$(MAKE) -f $(SELF_MAKEFILE) process
 
 $(SPLIT_PREFIX).done.dummy:	$(PROFILE_INPUT_DATA)
 	rm -f $(SPLIT_PREFIX).*
@@ -55,8 +60,10 @@ JOIN_CMD=cat
 
 # Templates for the split/processed files
 process: $(PROCESS_FILES)
+	$(MAKE) -f $(SELF_MAKEFILE) result
 
 result:  $(PROFILE_OUTPUT_FILE) #$(FILTERED_OUTPUT_FILE)
+	$(MAKE) -f $(SELF_MAKEFILE) cleanup
 
 $(PROFILE_OUTPUT_FILE):	$(PROCESS_FILES) 
 	$(JOIN_CMD) $(PROCESS_FILES) > $(PROFILE_OUTPUT_FILE).tmp

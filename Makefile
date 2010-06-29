@@ -67,5 +67,6 @@ endif
 
 # clean
 clean:	mesh_parse_clean gene_parse_clean pubmed_parse_clean
+	cat sql/drop-tables.sql | $(SQL_CMD)
 	-rm $(BIGTMP_DIR)/*
 
