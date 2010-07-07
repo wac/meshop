@@ -17,6 +17,7 @@ profile_gd_predict_clean:
 
 REF_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/$(REF_SOURCE)-profile
 BG_REF_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/BG-$(REF_SOURCE)-profile
+BG_REF_PROFILE2_PREFIX=$(PROFILE_GD_PREFIX)/BG-$(REF_SOURCE)-profile2
 DISEASE_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/disease-profile
 
 $(PROFILE_GD_PREFIX)/disease-disease-profiles.txt: \
@@ -81,7 +82,7 @@ $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-profiles.txt: \
 	echo PROFILE2_DATA=$(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt >> $@.mk && \
 	echo PROFILE1_SPLIT_PY=$(PROFILE_GD_PREDICT)/split-gene-profiles.py >> $@.mk && \
 	echo OUTPUT_FILE=$(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-profiles.txt >>$@.mk && \
-	echo SPLIT_PREFIX=$(BG_REF_PROFILE_PREFIX)/$(REF_SOURCE)-profile- >>$@.mk  && \
+	echo SPLIT_PREFIX=$(BG_REF_PROFILE2_PREFIX)/$(REF_SOURCE)-profile- >>$@.mk  && \
 	echo SPLIT_SUFFIX=txt  >>$@.mk  && \
 	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.mk && \
 	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
