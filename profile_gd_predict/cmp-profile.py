@@ -20,7 +20,7 @@ def usage():
     print "Total-count2 = n = number of black balls"
     print "p = p-value"
     print ""
-    print "Output format (disease|gene|D|G|I|U|L2_count|L2_count_Norm|L2_p|L2_logp|Intersect_L2_count_Norm|Intersect_L2_logp|sumdiff_logp|sum_logcombinedp|cosine_count_Norm|cosine_p)"
+    print "Output format (disease|gene|D|G|I|U|L2_count|L2_count_Norm|L2_p|L2_logp|Intersect_L2_count_Norm|Intersect_L2_logp|sumdiff_logp|sum_logcombinedp|cosine_count_Norm|cosine_p|cosine_tfidf)"
     print "D : number of disease terms"
     print "G : number of gene terms"
     print "I : number of intersecting (common) terms"
@@ -35,6 +35,7 @@ def usage():
     print "sum_logcombinedp : Sum,  combined p value"
     print "cosine_count_Norm: Cosine Distance of normalised counts"
     print "cosine_p: Cosine Distance of p-values"
+    print "cosine_tfidf: Cosine Distance of tf-idf values"
 
 sep='|'
 
