@@ -77,14 +77,14 @@ clean:	mesh_parse_clean gene_parse_clean pubmed_parse_clean cleanup
 # delete temporary files
 cleanup:
 	-rm $(BIGTMP_DIR)/*
-	-$(MAKE) $(DIRECT_GD_PREFIX)/all-comesh-p.txt.mk cleanup
-	-$(MAKE) $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt.mk cleanup
-	-$(MAKE) $(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt.mk cleanup
-	-$(MAKE) $(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt.mk cleanup
-	-$(MAKE) $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt.mk cleanup
-	-$(MAKE) $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-profiles.txt.mk cleanup
-	-$(MAKE) $(PROFILE_GD_PREFIX)/disease-disease-profiles.txt.mk cleanup
-	-$(MAKE) $(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt.mk cleanup
+	-$(MAKE) -f $(DIRECT_GD_PREFIX)/all-comesh-p.txt.mk cleanup
+	-$(MAKE) -f $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt.mk cleanup
+	-$(MAKE) -f $(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt.mk cleanup
+	-$(MAKE) -f $(DIRECT_GD_PREFIX)/$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt.mk cleanup
+	-$(MAKE) -f $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt.mk cleanup
+	-$(MAKE) -f $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-profiles.txt.mk cleanup
+	-$(MAKE) -f $(PROFILE_GD_PREFIX)/disease-disease-profiles.txt.mk cleanup
+	-$(MAKE) -f $(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt.mk cleanup
 
 
 
