@@ -3,6 +3,8 @@
 
 mesh_parse: $(MESH_PREFIX)/mesh_ids.txt $(MESH_PREFIX)/mesh_tree.txt \
 		$(MESH_PREFIX)/mesh-child.txt \
+		$(MESH_PREFIX)/mesh_syn.txt \
+		$(MESH_PREFIX)/mesh_pharma.txt \
 		mesh_parse_db
 
 mesh_parse_db:	$(SQL_PREFIX)/load-mesh-ids.txt \
@@ -33,6 +35,14 @@ $(SQL_PREFIX)/load-mesh-tree.txt:	$(MESH_PARSE)/mesh_tables.sql $(MESH_PREFIX)/m
 $(MESH_PREFIX)/mesh-child.txt:	$(SQL_PREFIX)/load-mesh-tree.txt $(MESH_PARSE)/mesh_child.sql
 	cat $(MESH_PARSE)/mesh_child.sql | $(SQL_CMD) && \
 	echo "SELECT * FROM mesh_child" | $(SQL_CMD) | sed "y/\t/\|/" > $@.tmp && \
+	mv -f $@.tmp $@
+
+$(MESH_PREFIX)/mesh_syn.txt:	$(MESH_PARSE)/mesh_syn.xsl 
+	zcat $(MESH_DESC_XML) | xsltproc --novalid $< - > $@.tmp && \
+	mv -f $@.tmp $@
+
+$(MESH_PREFIX)/mesh_pharma.txt:	$(MESH_PARSE)/mesh_pharma.xsl 
+	zcat $(MESH_DESC_XML) | xsltproc --novalid $< - > $@.tmp && \
 	mv -f $@.tmp $@
 
 mesh_parse_clean:

@@ -28,6 +28,7 @@ direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/nr-$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-all-$(REF_SOURCE)-gene-mesh-p.txt \
+		$(DIRECT_GD_PREFIX)/all-chem-mesh.txt \
 		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt
 #		$(DIRECT_GD_PREFIX)/mesh-stats.txt 
 
@@ -312,3 +313,10 @@ $(DIRECT_GD_PREFIX)/mesh-stats.txt: \
 		$(SQL_PREFIX)/load-titles.txt
 	echo "SELECT mesh_parent, MIN(pubyear) AS oldest_year, COUNT(DISTINCT pubmed.pmid) AS refs FROM pubmed_mesh_parent, pubmed WHERE pubmed_mesh_parent.pmid=pubmed.pmid GROUP BY mesh_parent" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp && \
 	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-chem-mesh.txt:	\
+		$(SQL_PREFIX)/load-mesh-parent.txt \
+		$(SQL_PREFIX)/load-chem.txt
+	echo "SELECT pubmed_chem.term, mesh_parent, pubmed_chem.pmid FROM pubmed_chem, pubmed_mesh_parent WHERE pubmed_chem.pmid=pubmed_mesh_parent.pmid;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,2 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
+	mv $@.tmp $@
+
