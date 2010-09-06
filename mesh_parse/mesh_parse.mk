@@ -5,6 +5,7 @@ mesh_parse: $(MESH_PREFIX)/mesh_ids.txt $(MESH_PREFIX)/mesh_tree.txt \
 		$(MESH_PREFIX)/mesh-child.txt \
 		$(MESH_PREFIX)/mesh_syn.txt \
 		$(MESH_PREFIX)/mesh_pharma.txt \
+		$(MESH_PREFIX)/meshsupp_pharma.txt \
 		mesh_parse_db
 
 mesh_parse_db:	$(SQL_PREFIX)/load-mesh-ids.txt \
@@ -42,6 +43,10 @@ $(MESH_PREFIX)/mesh_syn.txt:	$(MESH_PARSE)/mesh_syn.xsl
 	mv -f $@.tmp $@
 
 $(MESH_PREFIX)/mesh_pharma.txt:	$(MESH_PARSE)/mesh_pharma.xsl 
+	zcat $(MESH_DESC_XML) | xsltproc --novalid $< - > $@.tmp && \
+	mv -f $@.tmp $@
+
+$(MESH_PREFIX)/meshsupp_pharma.txt:	$(MESH_PARSE)/meshsupp_pharma.xsl 
 	zcat $(MESH_DESC_XML) | xsltproc --novalid $< - > $@.tmp && \
 	mv -f $@.tmp $@
 

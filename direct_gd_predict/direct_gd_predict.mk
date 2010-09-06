@@ -6,7 +6,8 @@
 # ?  How to inherit the directories names?
 
 # Command to get uniq -c as pipe-delimited format =>  line|count 
-UNIQ_COUNT=uniq -c | sed -r 's/^[[:blank:]]*([[:digit:]]*)[[:blank:]]*([[:print:]]*)/\2\|\1/'
+#UNIQ_COUNT=uniq -c | sed -r 's/^[[:blank:]]*([[:digit:]]*)[[:blank:]]*([[:print:]]*)/\2\|\1/'
+UNIQ_COUNT=uniq -c | sed -r 's/^[[:blank:]]*([[:digit:]]*)[[:blank:]]*(.*)/\2\|\1/'
 
 # Command to remove blank lines from output
 SED_RM_BLANK=sed '/^$$/d'
@@ -28,7 +29,7 @@ direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/nr-$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-all-$(REF_SOURCE)-gene-mesh-p.txt \
-		$(DIRECT_GD_PREFIX)/all-chem-mesh.txt \
+		$(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt
 #		$(DIRECT_GD_PREFIX)/mesh-stats.txt 
 
@@ -320,3 +321,27 @@ $(DIRECT_GD_PREFIX)/all-chem-mesh.txt:	\
 	echo "SELECT pubmed_chem.term, mesh_parent, pubmed_chem.pmid FROM pubmed_chem, pubmed_mesh_parent WHERE pubmed_chem.pmid=pubmed_mesh_parent.pmid;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,2 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
 	mv $@.tmp $@
 
+$(DIRECT_GD_PREFIX)/all-chem-refs.txt:	$(PUBMED_CHEM_TXT)
+	cat $(PUBMED_CHEM_TXT) | cut -d "|" -f 2 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp && \
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/all-chem-mesh.txt \
+		$(DIRECT_GD_PREDICT)/get_pval.R \
+		$(DIRECT_GD_PREDICT)/get_pval.mk \
+		$(DIRECT_GD_PREDICT)/merge_coc.py \
+		$(DIRECT_GD_PREDICT)/filter_file.py \
+		$(DIRECT_GD_PREFIX)/all-chem-refs.txt \
+		$(DIRECT_GD_PREFIX)/all-mesh-refs.txt \
+		$(SQL_PREFIX)/load-titles.txt
+	echo PROFILE_INPUT_DATA=$(DIRECT_GD_PREFIX)/all-chem-mesh.txt > $@.mk && \
+	echo PROFILE_OUTPUT_FILE=$@ >> $@.mk && \
+	echo PROFILE_PHYPER_TOTAL=`cat $(SQL_PREFIX)/load-titles.txt` >> $@.mk && \
+	echo PROFILE_GETP=$(DIRECT_GD_PREDICT)/get_pval.R >> $@.mk && \
+	echo PROFILE_MERGE_COC=$(DIRECT_GD_PREDICT)/merge_coc.py >> $@.mk && \
+	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/all-chem-refs.txt >> $@.mk && \
+	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.mk && \
+	echo PROFILE_REVERSED_INPUT= >> $@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
+	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.mk && \
+	$(MAKE) -f $@.mk start
