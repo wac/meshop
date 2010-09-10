@@ -29,8 +29,6 @@ for line in gfile:
     if line[0] == '#':
         continue
 
-    outfile.write(line)
-
     tuple=line.strip().split(sep)
     gene=tuple[0]
 
@@ -41,10 +39,13 @@ for line in gfile:
         currgene=gene
         numgenes=numgenes+1
         if numgenes < split_num:
+            outfile.write(line)
             continue
         numgenes = 0
         outfile.close()
         numfile=numfile+1
         outfilename=prefix+str(numfile)+'.txt'
         outfile=open(outfilename, 'w')
+
+    outfile.write(line)
 
