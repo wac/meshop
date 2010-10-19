@@ -29,6 +29,7 @@ direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/nr-$(REF_SOURCE)BG-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/nr-all-$(REF_SOURCE)-gene-mesh-p.txt \
+		$(DIRECT_GD_PREFIX)/chemBG-chem-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt
 #		$(DIRECT_GD_PREFIX)/mesh-stats.txt 
@@ -57,7 +58,7 @@ $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt:	\
 		$(SQL_PREFIX)/load-mesh-parent.txt \
 		$(SQL_PREFIX)/load-gene.txt \
 		$(SQL_PREFIX)/load-$(REF_SOURCE).txt
-	echo "SELECT gene.gene_id, mesh_parent, $(REF_SOURCE).pmid FROM $(REF_SOURCE), gene, pubmed_mesh_parent WHERE gene.gene_id=$(REF_SOURCE).gene_id AND $(REF_SOURCE).pmid=pubmed_mesh_parent.pmid;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,2 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
+	echo "SELECT gene.gene_id, mesh_parent, $(REF_SOURCE).pmid FROM $(REF_SOURCE), gene, pubmed_mesh_parent WHERE gene.gene_id=$(REF_SOURCE).gene_id AND $(REF_SOURCE).pmid=pubmed_mesh_parent.pmid;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
 	mv $@.tmp $@
 
 $(DIRECT_GD_PREFIX)/all-mesh-refs.txt:	\
@@ -68,6 +69,8 @@ $(DIRECT_GD_PREFIX)/all-mesh-refs.txt:	\
 # Only gene-referenced pmids
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene-$(REF_SOURCE)-mesh-refs.txt: \
 		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt \
+		$(SQL_PREFIX)/load-$(REF_SOURCE).txt \
+		$(SQL_PREFIX)/load-gene.txt \
 		$(DIRECT_GD_PREDICT)/filter_file.py
 	echo "SELECT pmid FROM $(REF_SOURCE), gene where $(REF_SOURCE).gene_id=gene.gene_id AND gene.taxon_id=$(TAXON_ID)" | $(SQL_CMD) | tail -n +2 | $(BIGSORT) | uniq > $@.tmp1
 	cat $@.tmp1 | wc --lines > $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene-$(REF_SOURCE)-count.txt && \
@@ -318,7 +321,7 @@ $(DIRECT_GD_PREFIX)/mesh-stats.txt: \
 $(DIRECT_GD_PREFIX)/all-chem-mesh.txt:	\
 		$(SQL_PREFIX)/load-mesh-parent.txt \
 		$(SQL_PREFIX)/load-chem.txt
-	echo "SELECT pubmed_chem.term, mesh_parent, pubmed_chem.pmid FROM pubmed_chem, pubmed_mesh_parent WHERE pubmed_chem.pmid=pubmed_mesh_parent.pmid;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,2 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
+	echo "SELECT pubmed_chem.term, mesh_parent, pubmed_chem.pmid FROM pubmed_chem, pubmed_mesh_parent WHERE pubmed_chem.pmid=pubmed_mesh_parent.pmid;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
 	mv $@.tmp $@
 
 $(DIRECT_GD_PREFIX)/all-chem-refs.txt:	$(PUBMED_CHEM_TXT)
@@ -341,6 +344,42 @@ $(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt: \
 	echo PROFILE_MERGE_COC=$(DIRECT_GD_PREDICT)/merge_coc.py >> $@.mk && \
 	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/all-chem-refs.txt >> $@.mk && \
 	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.mk && \
+	echo PROFILE_REVERSED_INPUT= >> $@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
+	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.mk && \
+	$(MAKE) -f $@.mk start
+
+# Only chem-referenced pmids
+$(DIRECT_GD_PREFIX)/chem-mesh-refs.txt: \
+		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt \
+		$(SQL_PREFIX)/load-chem.txt \
+		$(DIRECT_GD_PREDICT)/filter_file.py
+	echo "SELECT pmid FROM pubmed_chem" | $(SQL_CMD) | tail -n +2 | $(BIGSORT) | uniq > $@.tmp1
+	cat $@.tmp1 | wc --lines > $(DIRECT_GD_PREFIX)/chem-count.txt && \
+	cat $< | python $(DIRECT_GD_PREDICT)/filter_file.py --field 1 $@.tmp1 | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp && \
+	mv $@.tmp $@ ; rm $@.tmp1
+
+$(DIRECT_GD_PREFIX)/chem-count.txt: \
+		$(DIRECT_GD_PREFIX)/chem-mesh-refs.txt
+
+$(DIRECT_GD_PREFIX)/chemBG-chem-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/all-chem-mesh.txt \
+		$(DIRECT_GD_PREDICT)/get_pval.R \
+		$(DIRECT_GD_PREDICT)/get_pval.mk \
+		$(DIRECT_GD_PREDICT)/merge_coc.py \
+		$(DIRECT_GD_PREDICT)/filter_file.py \
+		$(DIRECT_GD_PREFIX)/all-chem-refs.txt \
+		$(DIRECT_GD_PREFIX)/all-mesh-refs.txt \
+		$(DIRECT_GD_PREFIX)/chem-count.txt \
+		$(DIRECT_GD_PREFIX)/chem-mesh-refs.txt \
+		$(SQL_PREFIX)/load-titles.txt
+	echo PROFILE_INPUT_DATA=$(DIRECT_GD_PREFIX)/all-chem-mesh.txt > $@.mk && \
+	echo PROFILE_OUTPUT_FILE=$@ >> $@.mk && \
+	echo PROFILE_PHYPER_TOTAL=`cat $(DIRECT_GD_PREFIX)/chem-count.txt` >> $@.mk && \
+	echo PROFILE_GETP=$(DIRECT_GD_PREDICT)/get_pval.R >> $@.mk && \
+	echo PROFILE_MERGE_COC=$(DIRECT_GD_PREDICT)/merge_coc.py >> $@.mk && \
+	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/all-chem-refs.txt >> $@.mk && \
+	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/chem-mesh-refs.txt >> $@.mk && \
 	echo PROFILE_REVERSED_INPUT= >> $@.mk && \
 	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.mk && \
