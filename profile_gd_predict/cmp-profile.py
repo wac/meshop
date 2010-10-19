@@ -212,6 +212,9 @@ def process_dterm(currterm, dprofile_raw, dtotal, dprofile_pval, dprofile_tfidf)
             pdist_logpval = pdist_logpval ** (0.5)
 
             cosine_norm = cosine_norm/( cosine_norm_gmag * cosine_norm_dmag )
+            if ( cosine_p_gmag * cosine_p_dmag == 0):
+                sys.stderr.write("Profile computation Error ("+currterm+sep+currgene+"): cosine_p_gmag ("+str(cosine_p_gmag)+") * cosine_p_dmag ("+str(cosine_p_dmag)+") == 0\n")
+                sys.exit(1)
             cosine_p = cosine_p/( cosine_p_gmag * cosine_p_dmag )
             cosine_tfidf = cosine_tfidf/( cosine_tfidf_gmag * cosine_tfidf_dmag )
 
