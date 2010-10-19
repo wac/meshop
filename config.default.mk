@@ -5,8 +5,9 @@
 # Input Files
 # Gzip XML files for PubMed
 PUBMED_XML=/home/wcheung/pubmed/baseline-2007
-# Gzip XML file for MeSH
-MESH_DESC_XML=../../Archive/Mesh/MeSH-2008-01-02/desc2008.gz
+# Gzip XML file for MeSH & Supplementals
+MESH_DESC_XML=/home/wcheung/MeSH/MeSH-2007/desc2007.gz
+MESH_SUPP_DESC_XML=/home/wcheung/MeSH/MeSH-2007/supp2007.gz
 # Directory for EntrezGene snapshot
 # contains DATA/gene2pubmed.gz, DATA/gene_info.gz, GeneRIF/generifs_basic.gz
 GENE_DIR=../../Archive/EntrezGene/Gene-2007-02-13

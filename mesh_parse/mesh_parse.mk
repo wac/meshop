@@ -47,7 +47,7 @@ $(MESH_PREFIX)/mesh_pharma.txt:	$(MESH_PARSE)/mesh_pharma.xsl
 	mv -f $@.tmp $@
 
 $(MESH_PREFIX)/meshsupp_pharma.txt:	$(MESH_PARSE)/meshsupp_pharma.xsl 
-	zcat $(MESH_DESC_XML) | xsltproc --novalid $< - > $@.tmp && \
+	zcat $(MESH_SUPP_DESC_XML) | xsltproc --novalid $< - > $@.tmp && \
 	mv -f $@.tmp $@
 
 mesh_parse_clean:
