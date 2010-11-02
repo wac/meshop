@@ -49,16 +49,22 @@ XSLT_PUBMED_AUTHOR_CMD=xsltproc --novalid $(PUBMED_AUTHOR_XSL) -
 pubmed_parse: $(PUBMED_TITLES_TXT) $(PUBMED_MESH_TXT) $(PUBMED_CHEM_TXT) \
 	$(PUBMED_MESH_PARENT_TXT) $(PUBMED_COMESH_TXT) \
 	$(PM_COMESH_PREFIX)/comesh-total.txt \
-	pubmed_parse_db
+	$(PM_TITLES_PREFIX)/pubmed-journal-uniq-dist.txt \
+	$(PM_CHEM_PREFIX)/pubmed-chem-uniq-dist.txt \
+	$(PM_AUTHOR_PREFIX)/pubmed-author-uniq-dist.txt \
+	pubmed_parse_db 
 
 pubmed_parse_db: $(SQL_PREFIX)/load-titles.txt $(SQL_PREFIX)/load-chem.txt \
 	$(SQL_PREFIX)/load-mesh.txt $(SQL_PREFIX)/load-author.txt \
 	$(SQL_PREFIX)/load-mesh-parent.txt
 
-pubmed_parse_titles:	$(PUBMED_TITLES_TXT)
+pubmed_parse_titles:	$(PUBMED_TITLES_TXT) \
+			$(PM_TITLES_PREFIX)/pubmed-journal-uniq-dist.txt
 pubmed_parse_mesh:	$(PUBMED_MESH_TXT)
-pubmed_parse_chem:	$(PUBMED_CHEM_TXT)
-pubmed_parse_author:	$(PUBMED_AUTHOR_TXT)
+pubmed_parse_chem:	$(PUBMED_CHEM_TXT) \
+			$(PM_CHEM_PREFIX)/pubmed-chem-uniq-dist.txt
+pubmed_parse_author:	$(PUBMED_AUTHOR_TXT) \
+			$(PM_AUTHOR_PREFIX)/pubmed-author-uniq-dist.txt
 
 pubmed_parse_clean:
 	rm -f $(PM_TITLES_PREFIX)/*.titles.txt
@@ -140,4 +146,29 @@ $(SQL_PREFIX)/load-author.txt: $(PUBMED_AUTHOR_TXT)
 	echo "DROP TABLE IF EXISTS pubmed_author" | mysql-dbrc $DBNAME && \
 	cat $(PUBMED_PARSE)/pubmed_tables.sql | $(SQL_CMD) && \
 	for file in $(PUBMED_AUTHOR_TXT); do echo "LOAD DATA LOCAL INFILE '$$file' INTO TABLE pubmed_author FIELDS TERMINATED by '|' IGNORE 1 LINES" | $(SQL_CMD); done > $@.tmp && \
+	mv $@.tmp $@
+
+# Might need to convert these to SQL queries, to only grab active PMIDs
+$(PM_AUTHOR_PREFIX)/pubmed-author-uniq.txt: $(PUBMED_AUTHOR_TXT)
+	cut -f 2,3,4 -d "|" $(PUBMED_AUTHOR_TXT) | sort | $(UNIQ_COUNT) > $@.tmp
+	mv $@.tmp $@
+
+$(PM_AUTHOR_PREFIX)/pubmed-author-uniq-dist.txt: $(PM_AUTHOR_PREFIX)/pubmed-author-uniq.txt
+	cut -f 4 -d "|" $< | sort -n | $(UNIQ_COUNT) > $@.tmp
+	mv $@.tmp $@
+
+$(PM_CHEM_PREFIX)/pubmed-chem-uniq.txt: $(PUBMED_CHEM_TXT)
+	cut -f 2 -d "|" $(PUBMED_CHEM_TXT) | sort | $(UNIQ_COUNT) > $@.tmp
+	mv $@.tmp $@
+
+$(PM_CHEM_PREFIX)/pubmed-chem-uniq-dist.txt: $(PM_CHEM_PREFIX)/pubmed-chem-uniq.txt
+	cut -f 2 -d "|" $< | sort -n | $(UNIQ_COUNT) > $@.tmp
+	mv $@.tmp $@
+
+$(PM_TITLES_PREFIX)/pubmed-journal-uniq.txt: $(PUBMED_TITLES_TXT)
+	cut -f 3 -d "|" $(PUBMED_TITLES_TXT) | sort | $(UNIQ_COUNT) > $@.tmp
+	mv $@.tmp $@
+
+$(PM_TITLES_PREFIX)/pubmed-journal-uniq-dist.txt: $(PM_TITLES_PREFIX)/pubmed-journal-uniq.txt
+	cut -f 2 -d "|" $< | sort -n | $(UNIQ_COUNT) > $@.tmp
 	mv $@.tmp $@

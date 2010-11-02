@@ -5,13 +5,6 @@
 # - Then,  template the entire gene-disease process?
 # ?  How to inherit the directories names?
 
-# Command to get uniq -c as pipe-delimited format =>  line|count 
-#UNIQ_COUNT=uniq -c | sed -r 's/^[[:blank:]]*([[:digit:]]*)[[:blank:]]*([[:print:]]*)/\2\|\1/'
-UNIQ_COUNT=uniq -c | sed -r 's/^[[:blank:]]*([[:digit:]]*)[[:blank:]]*(.*)/\2\|\1/'
-
-# Command to remove blank lines from output
-SED_RM_BLANK=sed '/^$$/d'
-
 # Command to sort - Assume working directory is safe since some of the
 # files will be (very) large
 #  -do NOT sort using dictionary (alphanumeric) only
