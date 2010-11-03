@@ -118,7 +118,7 @@ $(PROFILE_GD_PREFIX)/disease-chem-profiles.txt: \
 	echo PROFILE1_DATA=$(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt > $@.mk;\
 	echo PROFILE2_DATA=$(DIRECT_GD_PREFIX)/disease-comesh-p.txt >> $@.mk && \
 	echo PROFILE1_SPLIT_PY=$(PROFILE_GD_PREDICT)/split-gene-profiles.py >> $@.mk && \
-	echo OUTPUT_FILE=$(PROFILE_GD_PREFIX)/$@ >>$@.mk && \
+	echo OUTPUT_FILE=$@ >>$@.mk && \
 	echo SPLIT_PREFIX=$(DCHEM_PROFILE_PREFIX)/disease-chem-profile- >>$@.mk  && \
 	echo SPLIT_SUFFIX=txt  >>$@.mk  && \
 	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.mk && \
