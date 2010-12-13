@@ -377,3 +377,9 @@ $(DIRECT_GD_PREFIX)/chemBG-chem-mesh-p.txt: \
 	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.mk && \
 	$(MAKE) -f $@.mk start
+
+$(DIRECT_GD_PREFIX)/all-author-mesh.txt:	\
+		$(SQL_PREFIX)/load-mesh-parent.txt \
+		$(SQL_PREFIX)/load-author.txt
+	echo "select CONCAT(lastname, ', ', forename, ' (', initials, ')') AS name, mesh_parent from pubmed_author, pubmed_mesh_parent WHERE pubmed_author.pmid=pubmed_mesh_parent.pmid" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
+	mv $@.tmp $@
