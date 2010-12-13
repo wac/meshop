@@ -73,6 +73,7 @@ endif
 # clean
 clean:	mesh_parse_clean gene_parse_clean pubmed_parse_clean cleanup
 	cat sql/drop-tables.sql | $(SQL_CMD)
+	-rm $(SQL_PREFIX)/*.txt
 
 # delete temporary files
 cleanup:
