@@ -40,6 +40,7 @@ $(PROCESS_PREFIX)%.out: $(SPLIT_PREFIX)%.$(SPLIT_SUFFIX)
 
 $(OUTPUT_FILE): $(PROCESS_FILES)
 	ls $(PROCESS_PREFIX)*.out > $@.tmp1 && \
+	rm -f $@.tmp && \
 	xargs $(JOIN_CMD) > $@.tmp < $@.tmp1 && \
 	mv $@.tmp $@ ; rm $@.tmp1
 

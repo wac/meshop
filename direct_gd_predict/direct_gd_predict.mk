@@ -377,3 +377,36 @@ $(DIRECT_GD_PREFIX)/chemBG-chem-mesh-p.txt: \
 	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.mk && \
 	$(MAKE) -f $@.mk start
+
+# Author
+# Normalising the author name into a single field?
+$(DIRECT_GD_PREFIX)/all-author-mesh.txt:	\
+		$(SQL_PREFIX)/load-mesh-parent.txt \
+		$(SQL_PREFIX)/load-author.txt
+	echo "SELECT pubmed_author.term, mesh_parent, pubmed_author.pmid FROM pubmed_chem, pubmed_mesh_parent WHERE pubmed_chem.pmid=pubmed_mesh_parent.pmid;" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-author-refs.txt:	$(PUBMED_AUTHOR_TXT)
+	cat $< | cut -d "|" -f 2 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp && \
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-author-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/all-author-mesh.txt \
+		$(DIRECT_GD_PREDICT)/get_pval.R \
+		$(DIRECT_GD_PREDICT)/get_pval.mk \
+		$(DIRECT_GD_PREDICT)/merge_coc.py \
+		$(DIRECT_GD_PREDICT)/filter_file.py \
+		$(DIRECT_GD_PREFIX)/all-author-refs.txt \
+		$(DIRECT_GD_PREFIX)/all-mesh-refs.txt \
+		$(SQL_PREFIX)/load-titles.txt
+	echo PROFILE_INPUT_DATA=$(DIRECT_GD_PREFIX)/all-chem-mesh.txt > $@.mk && \
+	echo PROFILE_OUTPUT_FILE=$@ >> $@.mk && \
+	echo PROFILE_PHYPER_TOTAL=`cat $(SQL_PREFIX)/load-titles.txt` >> $@.mk && \
+	echo PROFILE_GETP=$(DIRECT_GD_PREDICT)/get_pval.R >> $@.mk && \
+	echo PROFILE_MERGE_COC=$(DIRECT_GD_PREDICT)/merge_coc.py >> $@.mk && \
+	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/all-chem-refs.txt >> $@.mk && \
+	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.mk && \
+	echo PROFILE_REVERSED_INPUT= >> $@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
+	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.mk && \
+	$(MAKE) -f $@.mk start
