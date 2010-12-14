@@ -24,6 +24,7 @@ direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/nr-all-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/chemBG-chem-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt \
+		$(DIRECT_GD_PREFIX)/all-author-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt
 #		$(DIRECT_GD_PREFIX)/mesh-stats.txt 
 
