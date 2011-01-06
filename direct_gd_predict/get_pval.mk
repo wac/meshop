@@ -30,6 +30,7 @@ PROCESS_FILES=$(SPLIT_FILES:$(SPLIT_PREFIX).%.in=$(PROCESS_PREFIX).%.out)
 
 # Command to split the input file
 SPLIT_LINES=1000000
+SPLIT_SUFFIX_LEN=4
 
 # start target will recursively invoke make to process and make the result
 start: $(SPLIT_PREFIX).done.dummy
@@ -39,7 +40,7 @@ $(SPLIT_PREFIX).done.dummy:	$(PROFILE_INPUT_DATA)
 	rm -f $(SPLIT_PREFIX).*
 	rm -f $(PROCESS_FILES) 
 #	rm -f $(FILTERED_PROCESS_FILES)
-	cat $(PROFILE_INPUT_DATA) | split --lines=$(SPLIT_LINES) - $(SPLIT_PREFIX).
+	cat $(PROFILE_INPUT_DATA) | split --lines=$(SPLIT_LINES) --suffix-length=$(SPLIT_SUFFIX_LEN) - $(SPLIT_PREFIX).
 	for f in $(SPLIT_PREFIX).* ;  do mv $$f $$f.in; done 
 	touch $@
 
