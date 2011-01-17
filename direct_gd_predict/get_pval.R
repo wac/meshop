@@ -4,7 +4,7 @@ outfile<-Sys.getenv("PROCESS_OUTFILE")
 outfile
 
 # Loading into R
-gene_mesh<-read.table(infile, sep="|", quote="")
+gene_mesh<-read.table(infile, sep="|", quote="", comment.char="")
 gene_mesh[1,]
 
 # Computing p-values

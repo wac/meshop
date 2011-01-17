@@ -387,8 +387,8 @@ $(DIRECT_GD_PREFIX)/all-author-mesh.txt:	\
 	echo "select CONCAT(lastname, ', ', forename, ' (', initials, ')') AS name, mesh_parent from pubmed_author, pubmed_mesh_parent WHERE pubmed_author.pmid=pubmed_mesh_parent.pmid" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
 	mv $@.tmp $@
 
-$(DIRECT_GD_PREFIX)/all-author-refs.txt:	$(PUBMED_AUTHOR_TXT)
-	cat $< | cut -d "|" -f 2 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp && \
+$(DIRECT_GD_PREFIX)/all-author-refs.txt:	$(SQL_PREFIX)/load-author.txt
+	echo "select CONCAT(lastname, ', ', forename, ' (', initials, ')') AS name from pubmed_author" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
 	mv $@.tmp $@
 
 $(DIRECT_GD_PREFIX)/all-author-mesh-p.txt: \
