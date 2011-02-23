@@ -51,5 +51,5 @@ cleanup:
 	rm -f $(PROCESS_PREFIX)*.out
 	rm -f $(SPLIT_PREFIX)*.$(SPLIT_SUFFIX)
 	rm -f $(SPLIT_PREFIX)done.dummy
-	rm -f $(SPLIT_PREFIX)*.tmp
+
 
