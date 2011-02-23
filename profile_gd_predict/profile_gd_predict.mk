@@ -9,7 +9,7 @@ profile_gd_predict: 	$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-pr
 			$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-count.txt \
                         $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-count.txt \
                         $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-count.txt \
-			$(PROFILE_GD_PREFIX)/disease-pharma-chem-profiles.txt 
+			$(PROFILE_GD_PREFIX)/disease-pharma-chem-profiles.txt \
                         $(PROFILE_GD_PREFIX)/disease-disease-count.txt 
 #			$(PROFILE_GD_PREFIX)/disease-chem-profiles.txt \
 #			$(PROFILE_GD_PREFIX)/author-author-profiles.txt
