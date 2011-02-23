@@ -26,7 +26,8 @@ direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/all-author-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/all-short-author-mesh-p.txt \
-		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt
+		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt \
+		$(DIRECT_GD_PREFIX)/pharma-chem-mesh-p.txt
 #		$(DIRECT_GD_PREFIX)/mesh-stats.txt 
 
 direct_gd_predict_clean: 
@@ -470,3 +471,18 @@ $(DIRECT_GD_PREFIX)/all-short-author-mesh-p.txt: \
 	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.mk && \
 	$(MAKE) -f $@.mk start
+
+# Limit extraction to only compounds in the pharmacologic action list
+$(DIRECT_GD_PREFIX)/pharma-chem.txt: \
+		$(MESH_PREFIX)/mesh_pharma.txt \
+		$(MESH_PREFIX)/meshsupp_pharma.txt
+	cut -f 2 -d "|" $(MESH_PREFIX)/mesh_pharma.txt $(MESH_PREFIX)/meshsupp_pharma.txt | sort | uniq > $@.tmp && \
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/pharma-chem-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/pharma-chem.txt \
+		$(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt \
+		$(DIRECT_GD_PREDICT)/filter_file.py 
+	cat $(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/pharma-chem.txt > $@.tmp && \
+	mv $@.tmp $@
+
