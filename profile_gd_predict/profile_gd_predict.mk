@@ -10,6 +10,8 @@ profile_gd_predict: 	$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-pr
                         $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-disease-$(REF_SOURCE)-count.txt \
                         $(PROFILE_GD_PREFIX)/BG-$(TAXON_NAME)-gene-gene-$(REF_SOURCE)-count.txt \
 			$(PROFILE_GD_PREFIX)/disease-pharma-chem-profiles.txt \
+			$(PROFILE_GD_PREFIX)/pharma-pharma-chem-profiles.txt \
+			$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-pharma-chem-$(REF_SOURCE)-profiles.txt \
                         $(PROFILE_GD_PREFIX)/disease-disease-count.txt 
 #			$(PROFILE_GD_PREFIX)/disease-chem-profiles.txt \
 #			$(PROFILE_GD_PREFIX)/author-author-profiles.txt
@@ -23,7 +25,7 @@ DISEASE_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/disease-profile
 DCHEM_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/dchem-profile
 DPCHEM_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/dpchem-profile
 AUTHOR_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/auth-profile
-PHARMGENE_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/pharmgene-profile
+PHARMREF_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/pharm-$(REF_SOURCE)-profile
 PHARMA_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/pharma-profile
 
 $(PROFILE_GD_PREFIX)/disease-disease-profiles.txt: \
@@ -158,7 +160,41 @@ $(PROFILE_GD_PREFIX)/disease-pharma-chem-profiles.txt: \
 	echo PROFILE2_DATA=$(DIRECT_GD_PREFIX)/disease-comesh-p.txt >> $@.mk && \
 	echo PROFILE1_SPLIT_PY=$(PROFILE_GD_PREDICT)/split-gene-profiles.py >> $@.mk && \
 	echo OUTPUT_FILE=$@ >>$@.mk && \
-	echo SPLIT_PREFIX=$(DPCHEM_PROFILE_PREFIX)/disease-chem-profile- >>$@.mk  && \
+	echo SPLIT_PREFIX=$(DPCHEM_PROFILE_PREFIX)/disease-pharma-chem-profile- >>$@.mk  && \
+	echo SPLIT_SUFFIX=txt  >>$@.mk  && \
+	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
+	echo include $(PROFILE_GD_PREDICT)/cmp-profile.mk >>$@.mk && \
+	$(MAKE) -f $@.mk start
+
+# Pharma-pharma
+$(PROFILE_GD_PREFIX)/pharma-pharma-chem-profiles.txt: \
+		$(DIRECT_GD_PREFIX)/pharma-chem-mesh-p.txt \
+		$(PROFILE_GD_PREDICT)/cmp-profile.py \
+		$(PROFILE_GD_PREDICT)/cmp-profile.mk \
+		$(PROFILE_GD_PREDICT)/split-gene-profiles.py 
+	echo PROFILE1_DATA=$(DIRECT_GD_PREFIX)/pharma-chem-mesh-p.txt > $@.mk && \
+	echo PROFILE2_DATA=$(DIRECT_GD_PREFIX)/pharma-chem-mesh-p.txt >> $@.mk && \
+	echo PROFILE1_SPLIT_PY=$(PROFILE_GD_PREDICT)/split-gene-profiles.py >> $@.mk && \
+	echo OUTPUT_FILE=$@ >>$@.mk && \
+	echo SPLIT_PREFIX=$(PHARMA_PROFILE_PREFIX)/pharma-pharma-chem-profile- >>$@.mk && \
+	echo SPLIT_SUFFIX=txt  >>$@.mk && \
+	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
+	echo include $(PROFILE_GD_PREDICT)/cmp-profile.mk >>$@.mk && \
+	$(MAKE) -f $@.mk start
+
+$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-pharma-chem-$(REF_SOURCE)-profiles.txt: \
+		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt \
+		$(DIRECT_GD_PREFIX)/pharma-chem-mesh-p.txt \
+		$(PROFILE_GD_PREDICT)/cmp-profile.py \
+		$(PROFILE_GD_PREDICT)/cmp-profile.mk \
+		$(PROFILE_GD_PREDICT)/split-gene-profiles.py
+	echo PROFILE1_DATA=$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-gene-mesh-p.txt > $@.mk;\
+	echo PROFILE2_DATA=$(DIRECT_GD_PREFIX)/pharma-chem-mesh-p.txt >> $@.mk && \
+	echo PROFILE1_SPLIT_PY=$(PROFILE_GD_PREDICT)/split-gene-profiles.py >> $@.mk && \
+	echo OUTPUT_FILE=$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-profiles.txt >>$@.mk && \
+	echo SPLIT_PREFIX=$(PHARMREF_PROFILE_PREFIX)/$(REF_SOURCE)-profile- >>$@.mk  && \
 	echo SPLIT_SUFFIX=txt  >>$@.mk  && \
 	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.mk && \
 	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
