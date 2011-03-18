@@ -26,7 +26,8 @@ TAXON_NAME=hum
 
 # Count unique lines using uniq -c
 # output pipe-delimited format =>  line|count
-UNIQ_COUNT=uniq -c | sed -r 's/^[[:blank:]]*([[:digit:]]*)[[:blank:]]*(.*)/\2\|\1/'
+UNIQ_COUNT=uniq -c | perl -p -e 's/^[[:blank:]]*([[:digit:]]*)[[:blank:]]*(.*)/\2\|\1/'
+#UNIQ_COUNT=uniq -c | sed -r 's/^[[:blank:]]*([[:digit:]]*)[[:blank:]]*(.*)/\2\|\1/'
 
 # Command to remove blank lines from output
 SED_RM_BLANK=sed '/^$$/d'
