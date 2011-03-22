@@ -31,6 +31,13 @@ SQL_PREFIX=$(TXT_PREFIX)/sql
 SHARE_PYTHON=./share/python
 
 ####### Include subprojects here
+.PHONY: default mesh_parse gene_parse pubmed_parse direct_gd_predict \
+		profile_gd_predict \
+		load_db gene_parse_db pubmed_parse_db \
+		mesh_parse_db \
+		clean mesh_parse_clean gene_parse_clean pubmed_parse_clean \
+		cleanup
+
 default:  mesh_parse gene_parse pubmed_parse direct_gd_predict \
 		profile_gd_predict
 

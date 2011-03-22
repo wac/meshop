@@ -21,6 +21,8 @@ SPLIT_FILES=$(wildcard $(SPLIT_PREFIX)*.$(SPLIT_SUFFIX))
 PROCESS_PREFIX=$(SPLIT_PREFIX)
 PROCESS_FILES=$(SPLIT_FILES:$(SPLIT_PREFIX)%.$(SPLIT_SUFFIX)=$(PROCESS_PREFIX)%.out)
 
+.PHONY: start result cleanup
+
 # Command to split the input file
 start:	$(SPLIT_PREFIX)done.dummy
 	$(MAKE) -f $(SELF_MAKEFILE) result
