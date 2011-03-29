@@ -1,6 +1,10 @@
-#!/bin/sh
+#!/bin/sh -e
 
-AWKCMD="\$1 == \"$1\" {print \"mysql --quick --compress --local-infile=1 --host=
-\" \$4 \" --user=\" \$2 \" --password=\" \$3 \" \" \$1}"
+AWKCMD="\$1 == \"$1\" {print \"mysql --quick --compress --local-infile=1 --host=\" \$4 \" --user=\" \$2 \" --password=\" \$3 \" \" \$1}"
 AWKRESULT=`cat ~/.dbrc | awk "$AWKCMD"`
-$AWKRESULT
+if [ -n "$AWKRESULT" ] ; then
+    $AWKRESULT
+else
+    echo "mysql-dbrc: No DB '$1' found"
+    exit 1
+fi
