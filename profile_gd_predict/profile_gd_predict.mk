@@ -12,7 +12,8 @@ profile_gd_predict: 	$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-disease-$(REF_SOURCE)-pr
 			$(PROFILE_GD_PREFIX)/disease-pharma-chem-profiles.txt \
 			$(PROFILE_GD_PREFIX)/pharma-pharma-chem-profiles.txt \
 			$(PROFILE_GD_PREFIX)/$(TAXON_NAME)-pharma-chem-$(REF_SOURCE)-profiles.txt \
-                        $(PROFILE_GD_PREFIX)/disease-disease-count.txt 
+                        $(PROFILE_GD_PREFIX)/disease-disease-count.txt \
+                        $(PROFILE_GD_PREFIX)/all-comesh-profiles.txt
 #			$(PROFILE_GD_PREFIX)/disease-chem-profiles.txt \
 #			$(PROFILE_GD_PREFIX)/author-author-profiles.txt
 
@@ -27,6 +28,7 @@ DPCHEM_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/dpchem-profile
 AUTHOR_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/auth-profile
 PHARMREF_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/pharm-$(REF_SOURCE)-profile
 PHARMA_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/pharma-profile
+ACOMESH_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/acomesh-profile
 
 $(PROFILE_GD_PREFIX)/disease-disease-profiles.txt: \
 		$(DIRECT_GD_PREFIX)/disease-comesh-p.txt \
