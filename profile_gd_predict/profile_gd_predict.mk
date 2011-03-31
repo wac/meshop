@@ -30,6 +30,22 @@ PHARMREF_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/pharm-$(REF_SOURCE)-profile
 PHARMA_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/pharma-profile
 ACOMESH_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/acomesh-profile
 
+$(PROFILE_GD_PREFIX)/all-comesh-profiles.txt: \
+		$(DIRECT_GD_PREFIX)/all-comesh-p.txt \
+		$(PROFILE_GD_PREDICT)/cmp-profile.py \
+		$(PROFILE_GD_PREDICT)/cmp-profile.mk \
+		$(PROFILE_GD_PREDICT)/split-gene-profiles.py 
+	echo PROFILE1_DATA=$(DIRECT_GD_PREFIX)/all-comesh-p.txt > $@.mk && \
+	echo PROFILE2_DATA=$(DIRECT_GD_PREFIX)/all-comesh-p.txt >> $@.mk && \
+	echo PROFILE1_SPLIT_PY=$(PROFILE_GD_PREDICT)/split-gene-profiles.py >> $@.mk && \
+	echo OUTPUT_FILE=$@ >>$@.mk && \
+	echo SPLIT_PREFIX=$(ACOMESH_PROFILE_PREFIX)/all-comesh-profile- >>$@.mk && \
+	echo SPLIT_SUFFIX=txt  >>$@.mk && \
+	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
+	echo include $(PROFILE_GD_PREDICT)/cmp-profile.mk >>$@.mk && \
+	$(MAKE) -f $@.mk start
+
 $(PROFILE_GD_PREFIX)/disease-disease-profiles.txt: \
 		$(DIRECT_GD_PREFIX)/disease-comesh-p.txt \
 		$(PROFILE_GD_PREDICT)/cmp-profile.py \
