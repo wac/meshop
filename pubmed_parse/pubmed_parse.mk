@@ -125,14 +125,14 @@ $(SQL_PREFIX)/load-chem.txt: $(PUBMED_CHEM_TXT)
 	mv $@.tmp $@
 
 $(SQL_PREFIX)/load-mesh.txt: $(PUBMED_MESH_TXT)
-	echo "DROP TABLE IF EXISTS pubmed_mesh" | mysql-dbrc $DBNAME && \
+	echo "DROP TABLE IF EXISTS pubmed_mesh" | $(SQL_CMD) && \
 	cat $(PUBMED_PARSE)/pubmed_tables.sql | $(SQL_CMD) && \
 	for file in $(PUBMED_MESH_TXT); do echo "LOAD DATA LOCAL INFILE '$$file' INTO TABLE pubmed_mesh FIELDS TERMINATED by '|' IGNORE 1 LINES" | $(SQL_CMD) ; done && \
 	echo "SELECT COUNT(*) FROM pubmed_mesh" | $(SQL_CMD) | tail -n +2  > $@.tmp && \
 	mv $@.tmp $@
 
 $(SQL_PREFIX)/load-mesh-parent.txt: $(PUBMED_MESH_PARENT_TXT)
-	echo "DROP TABLE IF EXISTS pubmed_mesh_parent" | mysql-dbrc $DBNAME && \
+	echo "DROP TABLE IF EXISTS pubmed_mesh_parent" | $(SQL_CMD) && \
 	cat $(PUBMED_PARSE)/pubmed_tables.sql | $(SQL_CMD) && \
 	for file in $(PUBMED_MESH_PARENT_TXT); do echo "LOAD DATA LOCAL INFILE '$$file' INTO TABLE pubmed_mesh_parent FIELDS TERMINATED by '|' IGNORE 1 LINES" | $(SQL_CMD); done > $@.tmp && \
 	mv $@.tmp $@
@@ -143,7 +143,7 @@ $(PM_MESH_PARENT_PREFIX)/mesh-parent.txt: $(SQL_PREFIX)/load-mesh-parent.txt
 
 
 $(SQL_PREFIX)/load-author.txt: $(PUBMED_AUTHOR_TXT)
-	echo "DROP TABLE IF EXISTS pubmed_author" | mysql-dbrc $DBNAME && \
+	echo "DROP TABLE IF EXISTS pubmed_author" | $(SQL_CMD) && \
 	cat $(PUBMED_PARSE)/pubmed_tables.sql | $(SQL_CMD) && \
 	for file in $(PUBMED_AUTHOR_TXT); do echo "LOAD DATA LOCAL INFILE '$$file' INTO TABLE pubmed_author FIELDS TERMINATED by '|' IGNORE 1 LINES" | $(SQL_CMD); done > $@.tmp && \
 	mv $@.tmp $@
