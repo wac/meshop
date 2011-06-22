@@ -11,6 +11,12 @@
 # FIXME this leaves temp files that aren't deleted?!
 BIGSORT=sort -T $(BIGTMP_DIR) 
 
+ifdef TAXON_ID
+TAXON_STATS=$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt \
+else
+TAXON_STATS=
+endif
+
 direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/all-comesh-p.txt \
@@ -26,7 +32,7 @@ direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/all-author-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/all-short-author-mesh-p.txt \
-		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt \
+		$(TAXON_STATS) \
 		$(DIRECT_GD_PREFIX)/pharma-chem-mesh-p.txt
 #		$(DIRECT_GD_PREFIX)/mesh-stats.txt 
 
@@ -43,9 +49,11 @@ direct_gd_predict_clean:
 #	mv $@.tmp $@
 
 # Extract all gene ids for organism $(TAXON_NAME)
+ifdef TAXON_ID
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt:  $(SQL_PREFIX)/load-gene.txt
 	echo "SELECT gene_id from gene WHERE taxon_id=$(TAXON_ID)" | $(SQL_CMD) | tail -n +2  > $@.tmp && \
 	mv $@.tmp $@
+endif
 
 # Get counts for all MeSH terms linked to each gene ID vis $(REF_SOURCE)
 # Get around query size limitations by doing the sorting/counting outside the DB
@@ -63,15 +71,28 @@ $(DIRECT_GD_PREFIX)/all-mesh-refs.txt:	\
 	mv $@.tmp $@
 
 # Count only gene-referenced pmids for each MeSH term for $(TAXON_NAME)
+
+ifdef TAXON_ID
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene-$(REF_SOURCE)-mesh-refs.txt: \
 		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt \
 		$(SQL_PREFIX)/load-$(REF_SOURCE).txt \
 		$(SQL_PREFIX)/load-gene.txt \
 		$(DIRECT_GD_PREDICT)/filter_file.py
 	echo "SELECT pmid FROM $(REF_SOURCE), gene where $(REF_SOURCE).gene_id=gene.gene_id AND gene.taxon_id=$(TAXON_ID)" | $(SQL_CMD) | tail -n +2 | $(BIGSORT) | uniq > $@.tmp1
+else
+$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene-$(REF_SOURCE)-mesh-refs.txt: \
+		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt \
+		$(SQL_PREFIX)/load-$(REF_SOURCE).txt \
+		$(SQL_PREFIX)/load-gene.txt \
+		$(DIRECT_GD_PREDICT)/filter_file.py \
+		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt \
+		$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-pmids.txt
+	cat $(GENE_PREFIX)/all-$(REF_SOURCE)-gene-pmids.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt | cut -d "|" -f 2 | $(BIGSORT) | uniq > $@.tmp1
+endif
 	cat $@.tmp1 | wc --lines > $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene-$(REF_SOURCE)-count.txt && \
 	cat $< | python $(DIRECT_GD_PREDICT)/filter_file.py --field 1 $@.tmp1 | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp && \
 	mv $@.tmp $@ ; rm $@.tmp1
+
 
 # Count of the total number of pmids referenced by gene ids for $(TAXON_NAME)
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene-$(REF_SOURCE)-count.txt: \
@@ -317,6 +338,7 @@ $(DIRECT_GD_PREFIX)/mesh-braindisease.txt:	$(SQL_PREFIX)/load-mesh-tree.txt
 
 # REF_SOURCE bibliometric gene stats for validation
 # number of refs,  oldest ref 
+
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt: \
 		$(DIRECT_GD_PREFIX)/$(TAXON_NAME)-gene.txt \
 		$(SQL_PREFIX)/load-$(REF_SOURCE).txt \

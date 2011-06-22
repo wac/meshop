@@ -1,14 +1,20 @@
 # Requires GNU Make
 # Requires presence of xsltproc, pubmed.xsl, pubmed-mesh.xsl
 
+# if TAXON_NAME is not defined to a species (sets TAXON_ID), you
+# will need to provide txt/direct_gene_disease/$(TAXON_NAME)-gene.txt
+
 # Global targets
 # clean: delete generated files
 
 # ... keep these?  Need to be updated anyways
 # setup: make output directories, create the config file if needed
-# default:  generate files
+# default:  generate files except for predictions
+# all: also generate profile predictions
+
 # setup-db:  initialise database tables (if needed)
 # load-db:  load files into database
+
 
 EGREP=grep -E -h 
 # This file contains the defaults
@@ -38,27 +44,11 @@ SHARE_PYTHON=./share/python
 		clean mesh_parse_clean gene_parse_clean pubmed_parse_clean \
 		cleanup
 
-default:  mesh_parse gene_parse pubmed_parse direct_gd_predict \
-		profile_gd_predict
+default:  mesh_parse gene_parse pubmed_parse direct_gd_predict 
+
+all: default profile_gd_predict
 
 load_db: gene_parse_db pubmed_parse_db mesh_parse_db
-
-UTIL=./util
-
-MESH_PARSE=./mesh_parse
-include $(MESH_PARSE)/mesh_parse.mk
-
-PUBMED_PARSE=./pubmed_parse
-include $(PUBMED_PARSE)/pubmed_parse.mk
-
-GENE_PARSE=./gene_parse
-include $(GENE_PARSE)/gene_parse.mk
-
-DIRECT_GD_PREDICT=./direct_gd_predict
-include $(DIRECT_GD_PREDICT)/direct_gd_predict.mk
-
-PROFILE_GD_PREDICT=./profile_gd_predict
-include $(PROFILE_GD_PREDICT)/profile_gd_predict.mk
 
 # Directory for very large temporary files
 BIGTMP_DIR=./tmp
@@ -76,6 +66,24 @@ ifeq "$(TAXON_NAME)" "sce"
 TAXON_ID=4932
 endif
 
+# Include sub-Makefiles
+
+UTIL=./util
+
+MESH_PARSE=./mesh_parse
+include $(MESH_PARSE)/mesh_parse.mk
+
+PUBMED_PARSE=./pubmed_parse
+include $(PUBMED_PARSE)/pubmed_parse.mk
+
+GENE_PARSE=./gene_parse
+include $(GENE_PARSE)/gene_parse.mk
+
+DIRECT_GD_PREDICT=./direct_gd_predict
+include $(DIRECT_GD_PREDICT)/direct_gd_predict.mk
+
+PROFILE_GD_PREDICT=./profile_gd_predict
+include $(PROFILE_GD_PREDICT)/profile_gd_predict.mk
 
 # clean
 clean:	mesh_parse_clean gene_parse_clean pubmed_parse_clean cleanup

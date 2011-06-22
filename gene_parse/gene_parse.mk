@@ -49,10 +49,21 @@ $(GENE_PREFIX)/all-$(REF_SOURCE)-gene-refs.txt:	\
 	echo "SELECT gene.gene_id, COUNT(pubmed.pmid) FROM $(REF_SOURCE), gene, pubmed WHERE gene.gene_id=$(REF_SOURCE).gene_id AND $(REF_SOURCE).pmid=pubmed.pmid GROUP BY gene.gene_id" | $(SQL_CMD) | sed "y/\t/\|/" | tail -n +2 > $@.tmp && \
 	mv -f $@.tmp $@
 
-#$(GENE_PREFIX)/all-generif-gene-refs.txt:	\
-#		$(GENE_PREFIX)/parsed_basic_rif.txt
-#	cat $(GENE_PREFIX)/parsed_basic_rif.txt | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1  | uniq | cut -d "|" -f 1 | $(SED_RM_BLANK) | $(UNIQ_COUNT) > $@.tmp
-#	mv $@.tmp $@
+#$(GENE_PREFIX)/all-$(REF_SOURCE)-gene-pmids.txt:	\
+#		$(SQL_PREFIX)/load-$(REF_SOURCE).txt \
+#		$(SQL_PREFIX)/load-titles.txt
+#	echo "SELECT gene.gene_id, pubmed.pmid FROM $(REF_SOURCE), gene, pubmed WHERE gene.gene_id=$(REF_SOURCE).gene_id AND $(REF_SOURCE).pmid=pubmed.pmid" | $(SQL_CMD) | sed "y/\t/\|/" | tail -n +2 > $@.tmp && \
+#	mv -f $@.tmp $@
+
+$(GENE_PREFIX)/all-gene2pubmed-gene-pmids.txt:	\
+		$(GENE_PREFIX)/gene2pubmed
+	tail -n +2 $< | cut -f 2,3 | sed "y/\t/\|/" | $(BIGSORT) | uniq > $@.tmp && \
+	mv -f $@.tmp $@
+
+$(GENE_PREFIX)/all-generif-gene-pmids.txt:	\
+		$(GENE_PREFIX)/parsed_basic_rif.txt
+	tail -n +2 $< | cut -f 1,2 | sed "y/\t/\|/" | $(BIGSORT) | uniq > $@.tmp && \
+	mv -f $@.tmp $@
 
 $(GENE_PREFIX)/all-generif-pmid-refs.txt:	\
 		$(GENE_PREFIX)/parsed_basic_rif.txt
