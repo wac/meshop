@@ -21,6 +21,7 @@ SQL_CMD=mysql-dbrc $(DB_NAME)
 REF_SOURCE=gene2pubmed
 
 TAXON_NAME=hum
+MESH_SUBSET=disease
 
 # Commands
 
