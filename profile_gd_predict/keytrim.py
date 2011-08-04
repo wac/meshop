@@ -1,5 +1,6 @@
 import sys
 import heapq
+import optparse
 
 # Splits each lines based on sep
 # ignores and prints lines starting with '#'
@@ -8,20 +9,27 @@ import heapq
 sep='|'
 key_col=0
 val_col=1
-heapsize=50
 
 old_key=False
 
 h=[]
 
-if (len(sys.argv) > 1):
-    heapsize=int(sys.argv[1])
+parser = optparse.OptionParser()
+parser.add_option("-n", dest="heapsize",
+                  default=50, action="store", type="int")
+parser.add_option("-R", "--random", dest="use_random",
+                  default=False, action="store_true")
 
-if (len(sys.argv) > 2):
-    key_col=int(sys.argv[2])
+(options, args) = parser.parse_args(sys.argv)
 
-if (len(sys.argv) > 3):
-    val_col=int(sys.argv[3])
+if (len(args) > 1):
+    options.heapsize=int(args[1])
+
+if (len(args) > 2):
+    key_col=int(args[2])
+
+if (len(args) > 3):
+    val_col=int(args[3])
 
 
 for line in sys.stdin:
@@ -45,7 +53,7 @@ for line in sys.stdin:
 
     item=(-float(tuples[val_col]),line)
 
-    if (len(h) < heapsize):
+    if (len(h) < options.heapsize):
         heapq.heappush(h, item)
     elif item > h[0]:
         heapq.heappushpop(h, (tuples[val_col],line))

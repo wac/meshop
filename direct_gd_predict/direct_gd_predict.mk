@@ -30,7 +30,7 @@ direct_gd_predict: $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt \
 		$(DIRECT_GD_PREFIX)/nr-all-$(REF_SOURCE)-gene-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/chemBG-chem-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt \
-		$(DIRECT_GD_PREFIX)/all-author-mesh-p.txt \
+		$(DIRECT_GD_PREFIX)/all-author-min20-mesh-p.txt \
 		$(DIRECT_GD_PREFIX)/all-short-author-mesh-p.txt \
 		$(TAXON_STATS) \
 		$(DIRECT_GD_PREFIX)/pharma-chem-mesh-p.txt
@@ -451,6 +451,11 @@ $(DIRECT_GD_PREFIX)/all-short-author-refs.txt:	$(SQL_PREFIX)/load-author.txt
 	mv $@.tmp $@
 
 # Author MeSHOPs
+$(DIRECT_GD_PREFIX)/all-author-min20-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/all-author-mesh-p.txt
+	cat $< | awk -F '|' '$$4 > 20' > $@.tmp && \
+	mv $@.tmp $@
+
 $(DIRECT_GD_PREFIX)/all-author-mesh-p.txt: \
 		$(DIRECT_GD_PREFIX)/all-author-mesh.txt \
 		$(DIRECT_GD_PREDICT)/get_pval.R \
@@ -507,4 +512,3 @@ $(DIRECT_GD_PREFIX)/pharma-chem-mesh-p.txt: \
 		$(DIRECT_GD_PREDICT)/filter_file.py 
 	cat $(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/pharma-chem.txt > $@.tmp && \
 	mv $@.tmp $@
-
