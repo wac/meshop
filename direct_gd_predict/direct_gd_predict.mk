@@ -315,6 +315,11 @@ $(DIRECT_GD_PREFIX)/mesh-braindisease.txt:	$(SQL_PREFIX)/load-mesh-tree.txt
 	echo "SELECT term from mesh_tree WHERE tree_num LIKE 'C10.228.140.%'" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp && \
 	mv $@.tmp $@
 
+# All terms including/under the MeSH term for Pharmacologic Actions
+$(DIRECT_GD_PREFIX)/mesh-pharmaction.txt:	$(SQL_PREFIX)/load-mesh-tree.txt
+	echo "SELECT term from mesh_tree WHERE tree_num LIKE 'D27.505.%'" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp && \
+	mv $@.tmp $@
+
 # REF_SOURCE bibliometric gene stats for validation
 # number of refs,  oldest ref 
 $(DIRECT_GD_PREFIX)/$(TAXON_NAME)-$(REF_SOURCE)-stats.txt: \
@@ -479,6 +484,12 @@ $(DIRECT_GD_PREFIX)/pharma-chem.txt: \
 	cut -f 2 -d "|" $(MESH_PREFIX)/mesh_pharma.txt $(MESH_PREFIX)/meshsupp_pharma.txt | sort | uniq > $@.tmp && \
 	mv $@.tmp $@
 
+$(DIRECT_GD_PREFIX)/pharmaction-chem.txt: \
+		$(DIRECT_GD_PREFIX)/mesh-pharmaction.txt \
+		$(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt
+	cat $(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/mesh-pharmaction.txt -f 1 | cut -f 1 -d "|" | sort | uniq > $@.tmp && \
+	mv $@.tmp $@
+
 $(DIRECT_GD_PREFIX)/pharma-chem-mesh-p.txt: \
 		$(DIRECT_GD_PREFIX)/pharma-chem.txt \
 		$(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt \
@@ -486,3 +497,10 @@ $(DIRECT_GD_PREFIX)/pharma-chem-mesh-p.txt: \
 	cat $(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/pharma-chem.txt > $@.tmp && \
 	mv $@.tmp $@
 
+
+$(DIRECT_GD_PREFIX)/pharmaction-chem-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/pharmaction-chem.txt \
+		$(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt \
+		$(DIRECT_GD_PREDICT)/filter_file.py
+	cat $(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/pharmaction-chem.txt > $@.tmp && \
+	mv $@.tmp $@
