@@ -55,7 +55,7 @@ def main():
     currterm=''
     dtotal=0.0
     
-    print "# disease|gene|I|U|L2_count|L2_count_Norm|L2_p|L2_logp|Intersect_L2_count_Norm|Intersect_L2_logp|sumdiff_logp|sum_logcombinedp|cosine_count_Norm|cosine_p|cosine_tfidf"
+    print "# disease|gene|D|G|I|U|L2_count|L2_count_Norm|L2_p|L2_logp|Intersect_L2_count_Norm|Intersect_L2_logp|sumdiff_logp|sum_logcombinedp|cosine_count_Norm|cosine_p|cosine_tfidf"
 
     disease_file=open(sys.argv[1], 'r')
     for line in disease_file:
