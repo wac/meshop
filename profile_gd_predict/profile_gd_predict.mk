@@ -219,6 +219,11 @@ $(PROFILE_GD_PREFIX)/$(TAXON_NAME)-pharma-chem-$(REF_SOURCE)-profiles.txt: \
 	echo include $(PROFILE_GD_PREDICT)/cmp-profile.mk >>$@.mk && \
 	$(MAKE) -f $@.mk start
 
+# litp correction
+$(PROFILE_GD_PREFIX)/disease_pharma_chem_pscores.txt: \
+		$(PROFILE_GD_PREDICT)/merge-litp-score.py
+	cat $(PROFILE_GD_PREFIX)/disease_chem_score_p.txt | python $(PROFILE_GD_PREDICT)/merge-litp-score.py $(PROFILE_GD_PREFIX)/disease_term_p.txt $(PROFILE_GD_PREFIX)/chem_term_p.txt $(PROFILE_GD_PREFIX)/disease-pharma-chem-litp-score_table.txt > $@.tmp && mv $@.tmp $@
+
 # Need p-values for comesh profiles
 # Use the same file as for disease?
 # Compute in parse_pubmed?
