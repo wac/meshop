@@ -461,6 +461,16 @@ $(DIRECT_GD_PREFIX)/all-author-min20-mesh-p.txt: \
 	cat $< | awk -F '|' '$$4 > 20' > $@.tmp && \
 	mv $@.tmp $@
 
+$(DIRECT_GD_PREFIX)/all-author-min20-max1000-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/all-author-mesh-p.txt
+	cat $< | awk -F '|' '$$4 > 20 && $$4 < 1000' > $@.tmp && \
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/all-author-mesh-p.txt
+	cat $< | awk -F '|' '$$4 > 15 && $$4 < 1000' > $@.tmp && \
+	mv $@.tmp $@
+
 $(DIRECT_GD_PREFIX)/all-author-mesh-p.txt: \
 		$(DIRECT_GD_PREFIX)/all-author-mesh.txt \
 		$(DIRECT_GD_PREDICT)/get_pval.R \
@@ -530,3 +540,83 @@ $(DIRECT_GD_PREFIX)/therapeutic-chem-mesh-p.txt: \
 		$(DIRECT_GD_PREDICT)/filter_file.py
 	cat $(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/therapeutic-chem.txt > $@.tmp && \
 	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/journal-mesh.txt: \
+		$(SQL_PREFIX)/load-titles.txt \
+		$(SQL_PREFIX)/load-mesh-parent.txt
+	echo "SELECT journaltitle, mesh_parent, pubmed.pmid FROM pubmed, pubmed_mesh_parent WHERE pubmed.pmid=pubmed_mesh_parent.pmid" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
+        mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/journal-min2005-mesh.txt: \
+		$(SQL_PREFIX)/load-titles.txt \
+		$(SQL_PREFIX)/load-mesh-parent.txt
+	echo "SELECT journaltitle, mesh_parent, pubmed.pmid FROM pubmed, pubmed_mesh_parent WHERE pubmed.pmid=pubmed_mesh_parent.pmid AND pubmed.pubyear >= 2005" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
+        mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/journal-refs.txt: \
+		$(SQL_PREFIX)/load-titles.txt 
+	echo "SELECT journaltitle, pubmed.pmid FROM pubmed" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1 | $(UNIQ_COUNT) > $@.tmp && \
+        mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/journal-min2005-refs.txt: \
+		$(SQL_PREFIX)/load-titles.txt 
+	echo "SELECT journaltitle, pubmed.pmid FROM pubmed WHERE pubyear >= 2005" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1 | $(UNIQ_COUNT) > $@.tmp && \
+        mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/nr-journal-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/journal-mesh-p.txt \
+		$(UTIL)/filter-leaf.py $(MESH_PREFIX)/mesh-child.txt
+	cat $< | python $(UTIL)/filter-leaf.py $(MESH_PREFIX)/mesh-child.txt > $@.tmp && \
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/journal-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/journal-mesh.txt \
+		$(DIRECT_GD_PREDICT)/get_pval.R \
+		$(DIRECT_GD_PREDICT)/get_pval.mk \
+		$(DIRECT_GD_PREDICT)/merge_coc.py \
+		$(DIRECT_GD_PREDICT)/filter_file.py \
+		$(DIRECT_GD_PREFIX)/journal-refs.txt \
+		$(DIRECT_GD_PREFIX)/all-mesh-refs.txt \
+		$(SQL_PREFIX)/load-titles.txt
+	echo PROFILE_INPUT_DATA=$(DIRECT_GD_PREFIX)/journal-mesh.txt > $@.mk && \
+	echo PROFILE_OUTPUT_FILE=$@ >> $@.mk && \
+	echo PROFILE_PHYPER_TOTAL=`cat $(SQL_PREFIX)/load-titles.txt` >> $@.mk && \
+	echo PROFILE_GETP=$(DIRECT_GD_PREDICT)/get_pval.R >> $@.mk && \
+	echo PROFILE_MERGE_COC=$(DIRECT_GD_PREDICT)/merge_coc.py >> $@.mk && \
+	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/journal-refs.txt >> $@.mk && \
+	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.mk && \
+	echo PROFILE_REVERSED_INPUT= >> $@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
+	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.mk && \
+	$(MAKE) -f $@.mk start
+
+$(DIRECT_GD_PREFIX)/nr-journal-min2005-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/journal-min2005-mesh-p.txt \
+		$(UTIL)/filter-leaf.py $(MESH_PREFIX)/mesh-child.txt
+	cat $< | python $(UTIL)/filter-leaf.py $(MESH_PREFIX)/mesh-child.txt > $@.tmp && \
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/journal-min2005-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/journal-min2005-mesh.txt \
+		$(DIRECT_GD_PREDICT)/get_pval.R \
+		$(DIRECT_GD_PREDICT)/get_pval.mk \
+		$(DIRECT_GD_PREDICT)/merge_coc.py \
+		$(DIRECT_GD_PREDICT)/filter_file.py \
+		$(DIRECT_GD_PREFIX)/journal-min2005-refs.txt \
+		$(DIRECT_GD_PREFIX)/all-mesh-refs.txt \
+		$(SQL_PREFIX)/load-titles.txt
+	echo PROFILE_INPUT_DATA=$(DIRECT_GD_PREFIX)/journal-min2005-mesh.txt > $@.mk && \
+	echo PROFILE_OUTPUT_FILE=$@ >> $@.mk && \
+	echo PROFILE_PHYPER_TOTAL=`cat $(SQL_PREFIX)/load-titles.txt` >> $@.mk && \
+	echo PROFILE_GETP=$(DIRECT_GD_PREDICT)/get_pval.R >> $@.mk && \
+	echo PROFILE_MERGE_COC=$(DIRECT_GD_PREDICT)/merge_coc.py >> $@.mk && \
+	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/journal-min2005-refs.txt >> $@.mk && \
+	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.mk && \
+	echo PROFILE_REVERSED_INPUT= >> $@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
+	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.mk && \
+	$(MAKE) -f $@.mk start
+
+$(DIRECT_GD_PREFIX)/author-author.txt: \
+		$(SQL_PREFIX)/load-titles.txt
+	echo "SELECT FROM pubmed_author as pa1, pubmed_author as pa2"
