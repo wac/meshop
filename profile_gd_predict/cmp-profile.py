@@ -143,8 +143,14 @@ def compare_gdterm(currgene, currterm, dprofile_raw, dtotal, dprofile_norm, dpro
         else:
             profile_raw[key] = gprofile_raw[key]
             profile_norm[key] = gprofile_norm[key]
-            profile_pval[key]= gprofile_pval[key]
+            profile_pval[key]= 1.0 - gprofile_pval[key]
             profile_logpval[key]= safelog(gprofile_pval[key])
+            cosine_p = cosine_p+gprofile_pval[key]
+            
+    for key in dprofile_raw:
+        if not key in gprofile_raw:
+            profile_pval[key] = 1.0 - dprofile_pval[key]
+            cosine_p = cosine_p + dprofile_pval[key]
 
     ucount = 0
     for key in profile_raw:

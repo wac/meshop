@@ -17,4 +17,4 @@ echo "dpc.lit_p<-cbind(probs, apply(probs, 1, function(x) sum(dpc[,1] > dpc.psco
 echo "dpc.lit_p<-cbind(dpc.lit_p, dpc.lit_p[,4]/dim(dpc)[1])" >> $TXTDIR/$SCRIPTFILE
 echo "write.table(dpc.lit_p, 'disease-pharma-chem-litp-score_table.$1.$2.txt', sep='|', row.names=FALSE, col.names=FALSE, quote=FALSE)" >> $TXTDIR/$SCRIPTFILE
 
-cd $TXTDIR ; R CMD BATCH --no-save --no-restore $SCRIPTFILE
+cd $TXTDIR ; R CMD BATCH --vanilla $SCRIPTFILE
