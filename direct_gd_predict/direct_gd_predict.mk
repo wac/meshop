@@ -450,6 +450,11 @@ $(DIRECT_GD_PREFIX)/all-author-refs.txt:	$(SQL_PREFIX)/load-author.txt
 	echo "select UPPER(CONCAT(lastname, ', ', forename, ' (', initials, ')')) AS name, pmid from pubmed_author" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1 | $(UNIQ_COUNT) > $@.tmp && \
 	mv $@.tmp $@
 
+# Author-author co-occurrence
+$(DIRECT_GD_PREFIX)/all-author-author-refs.txt:	$(SQL_PREFIX)/load-author.txt
+	echo "select UPPER(CONCAT(pubmed_author.lastname, ', ', pubmed_author.forename, ' (', pubmed_author.initials, ')')) AS name1,UPPER(CONCAT(pubmed_author2.lastname, ', ', pubmed_author2.forename, ' (', pubmed_author2.initials, ')')) AS name2, pubmed_author.pmid from pubmed_author, pubmed_author AS pubmed_author2 WHERE pubmed_author.pmid=pubmed_author2.pmid" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1 -k 2 | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
+	mv $@.tmp $@
+
 # Abbrev Author referenced article counts
 $(DIRECT_GD_PREFIX)/all-short-author-refs.txt:	$(SQL_PREFIX)/load-author.txt
 	echo "select UPPER(CONCAT(lastname, ', ', initials)) AS name, pmid from pubmed_author" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1 | $(UNIQ_COUNT) > $@.tmp && \
