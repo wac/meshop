@@ -15,7 +15,7 @@ SCORE=12
 
 if [ -f $TXTDIR/disease-pharma-chem-litp-score$SCORE-profiles.txt ]
 then
-    echo Found -- $TXTDIR/disease-pharma-chem-litp-$SCORE-profiles.txt
+    echo Found -- $TXTDIR/disease-pharma-chem-litp-score$SCORE-profiles.txt
     echo done
     exit
 fi
@@ -28,6 +28,8 @@ then
     echo Generated -- $TXTDIR/disease-pharma-chem-profiles-score3,4,$SCORE.txt
     rm -f $TXTDIR/disease-pharma-chem-litp-score_table.*.*.txt
     echo "Cleared $TXTDIR/disease-pharma-chem-litp-score_table.*.*.txt"
+    rm -f  $TXTDIR/disease-pharma-chem-litp-score$SCORE-table.txt
+    echo "Cleared $TXTDIR/disease-pharma-chem-litp-score$SCORE-table.txt"
 fi
 
 if [ ! -f $TXTDIR/disease-pharma-score$SCORE-chem-pscores.txt ]
