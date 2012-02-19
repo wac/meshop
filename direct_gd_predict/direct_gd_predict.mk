@@ -476,6 +476,25 @@ $(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p.txt: \
 	cat $< | awk -F '|' '$$4 > 15 && $$4 < 1000' > $@.tmp && \
 	mv $@.tmp $@
 
+$(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p-occurrence.txt: \
+		 $(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p.txt
+	cat $< | python $(DIRECT_GD_PREDICT)/get-occurrence.py > $@.tmp && \
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p-avg-tier4.txt: \
+		$(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p-occurrence.txt \
+		$(MESH_PREFIX)/mesh-tier4.txt \
+		$(DIRECT_GD_PREDICT)/filter_file.py
+	cat $< | python $(DIRECT_GD_PREDICT)/filter_file.py $(MESH_PREFIX)/mesh-tier4.txt | cut -f 1,5 -d '|' | sort -k 2 -t '|' | head -n 1000 > $@.tmp && \
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-author-min15-max1000-hash-avg-tier4-1000.txt: \
+		$(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p.txt \
+		$(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p-avg-tier4.txt \
+		$(DIRECT_GD_PREDICT)/hash-profile.py
+	cat $< | python $(DIRECT_GD_PREDICT)/hash-profile.py $(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p-avg-tier4.txt > $@.tmp && \
+	mv $@.tmp $@
+
 $(DIRECT_GD_PREFIX)/all-author-mesh-p.txt: \
 		$(DIRECT_GD_PREFIX)/all-author-mesh.txt \
 		$(DIRECT_GD_PREDICT)/get_pval.R \

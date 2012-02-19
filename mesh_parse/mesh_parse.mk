@@ -55,6 +55,10 @@ $(MESH_PREFIX)/meshsupp_cas.txt:	$(MESH_PARSE)/meshsupp_cas.xsl
 	zcat $(MESH_SUPP_DESC_XML) | xsltproc --novalid $< - > $@.tmp && \
 	mv -f $@.tmp $@
 
+$(MESH_PREFIX)/mesh-tier4.txt:	 $(SQL_PREFIX)/load-mesh-tree.txt
+	echo "SELECT term FROM mesh_tree WHERE tree_num LIKE '%.%.%.%' AND tree_num NOT LIKE '%.%.%.%.%'" | $(SQL_CMD) | tail -n +2 > $@.tmp && \
+	mv $@.tmp $@
+
 mesh_parse_clean:
 	rm -f $(MESH_PREFIX)/mesh_ids.txt $(MESH_PREFIX)/mesh_tree.txt
 	rm -f $(MESH_PREFIX)/mesh-child.txt 

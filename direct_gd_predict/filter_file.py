@@ -23,7 +23,7 @@ def main():
 				default=0, action="store", type="int")
 	(options, args) = parser.parse_args(sys.argv)
 
-	options.num_fields=1
+#	options.num_fields=1
 	if (len(args) >= 3):
 		patfile=open(args[1])
 		if (args[2] == '-'):

@@ -11,7 +11,8 @@
 
 TXTDIR=../txt/profile_gene_disease
 #SCORE=8
-SCORE=12
+#SCORE=12
+SCORE=10
 
 if [ -f $TXTDIR/disease-pharma-chem-litp-score$SCORE-profiles.txt ]
 then
