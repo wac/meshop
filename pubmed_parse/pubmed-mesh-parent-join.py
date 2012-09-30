@@ -3,8 +3,7 @@ from sets import Set
 
 def usage():
     print sys.argv[0], " mesh_child_file pubmed_mesh file [mesh_parent output] [mesh_counts]"
-    print sys.argv[0], " [mesh_parent output] and [mesh_counts] are optional (default to stdout)"
-
+    print sys.argv[0], " [mesh_parent output] and [mesh_counts] are optional (mesh_parent defaults to stdout, mesh_counts will be skipped)"
 
 if len(sys.argv) < 3:
     usage()
@@ -14,6 +13,9 @@ mesh_child_file=sys.argv[1]
 pubmed_file=sys.argv[2]
 sep='|'
 
+#co-occurring MeSH terms
+coMeSH = {}
+
 mesh_parent = {}
 
 if len(sys.argv) < 4:
@@ -22,6 +24,7 @@ else:
     f2=open(sys.argv[3], 'w')
     if len(sys.argv) < 5:
         f3=sys.stdout
+        coMeSH=False
     else:
         f3=open(sys.argv[4], 'w')
 
@@ -42,8 +45,6 @@ f=open(pubmed_file, 'r')
 parents = Set([])
 curr_pmid="-1"
 
-#co-occurring MeSH terms
-coMeSH = {}
 
 for line in f:
     tuple=line.rstrip().split(sep)
@@ -56,17 +57,19 @@ for line in f:
                 f2.write(curr_pmid + "|" + parent_id + "\n")
                 for parent_id2 in parents:
                     key = parent_id + "|" + parent_id2
-                    if key in coMeSH:
-                        coMeSH[key]=coMeSH[key]+1
-                    else:
-                        coMeSH[key]=1
+                    if coMeSH:
+                        if key in coMeSH:
+                            coMeSH[key]=coMeSH[key]+1
+                        else:
+                            coMeSH[key]=1
         curr_pmid=pmid
         parents = Set([])
     if mesh_id in mesh_parent:
         parents=parents.union(mesh_parent[mesh_id])
 #    print "mesh_parent", mesh_parent[mesh_id]
 #    print "Parents", parents
-            
-for key in coMeSH:
-    f3.write(str(coMeSH[key]) + "|" + key + "\n")
+
+if coMeSH:
+    for key in coMeSH:
+        f3.write(str(coMeSH[key]) + "|" + key + "\n")
 

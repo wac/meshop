@@ -32,3 +32,5 @@ UNIQ_COUNT=uniq -c | perl -p -e 's/^[[:blank:]]*([[:digit:]]*)[[:blank:]]*(.*)/\
 
 # Command to remove blank lines from output
 SED_RM_BLANK=sed '/^$$/d'
+
+AUTHOR_TOP_MESH=20

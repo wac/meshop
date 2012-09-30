@@ -116,4 +116,10 @@ term VARCHAR(256),
 PRIMARY KEY (pmid, term)
 );
 
-
+CREATE TABLE IF NOT EXISTS author_mesh20
+(
+author VARCHAR(256),
+term VARCHAR(256),
+PRIMARY KEY (author, term),
+INDEX(term, author)
+)

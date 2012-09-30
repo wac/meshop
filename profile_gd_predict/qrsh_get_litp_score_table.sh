@@ -11,8 +11,8 @@
 
 TXTDIR=../txt/profile_gene_disease
 #SCORE=8
-#SCORE=12
-SCORE=10
+SCORE=12
+#SCORE=10
 
 if [ -f $TXTDIR/disease-pharma-chem-litp-score$SCORE-profiles.txt ]
 then
@@ -20,7 +20,7 @@ then
     echo done
     exit
 fi
-echo Not Found -- $TXTDIR/disease-pharma-chem-litp-profiles.txt
+echo Not Found -- $TXTDIR/disease-pharma-chem-litp-score$SCORE-profiles.txt
 
 if [ ! -f $TXTDIR/disease-pharma-chem-profiles-score3,4,$SCORE.txt ]
 then

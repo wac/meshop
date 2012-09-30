@@ -39,6 +39,14 @@ $(MESH_PREFIX)/mesh-child.txt:	$(SQL_PREFIX)/load-mesh-tree.txt $(MESH_PARSE)/me
 	echo "SELECT * FROM mesh_child" | $(SQL_CMD) | sed "y/\t/\|/" > $@.tmp && \
 	mv -f $@.tmp $@
 
+$(MESH_PREFIX)/mesh-directchild.txt:	$(SQL_PREFIX)/load-mesh-tree.txt $(MESH_PARSE)/mesh_directchild.sql
+	cat $(MESH_PARSE)/mesh_directchild.sql | $(SQL_CMD) && \
+	echo "SELECT * FROM mesh_directchild" | $(SQL_CMD) | sed "y/\t/\|/" > $@.tmp && \
+	mv -f $@.tmp $@
+
+$(MESH_PREFIX)/mesh-parentunion-directchild.txt: $(MESH_PREFIX)/mesh-directchild.txt $(MESH_PREFIX)/mesh-child.txt
+	cat  $(MESH_PREFIX)/mesh-directchild.txt $(MESH_PREFIX)/mesh-child.txt | sort | uniq > $@.tmp && mv $@.tmp $@
+
 $(MESH_PREFIX)/mesh_syn.txt:	$(MESH_PARSE)/mesh_syn.xsl 
 	zcat $(MESH_DESC_XML) | xsltproc --novalid $< - > $@.tmp && \
 	mv -f $@.tmp $@
