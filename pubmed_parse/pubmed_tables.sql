@@ -32,6 +32,15 @@ FOREIGN KEY (pmid) REFERENCES pubmed,
 INDEX (mesh_parent)
 );
 
+CREATE TABLE IF NOT EXISTS pubmed_mesh_parentunion
+(
+pmid int,
+mesh_parentunion VARCHAR(256),	
+PRIMARY KEY (pmid, mesh_parentunion),
+FOREIGN KEY (pmid) REFERENCES pubmed,
+INDEX (mesh_parentunion)
+);
+
 CREATE TABLE IF NOT EXISTS pubmed_chem
 (
 pmid int,

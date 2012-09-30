@@ -9,6 +9,10 @@
 # files will be (very) large
 #  -do NOT sort using dictionary (alphanumeric) only
 # FIXME this leaves temp files that aren't deleted?!
+
+#MESH_SUBCAT=braindisease
+MESH_SUBCAT=psychdisease
+
 BIGSORT=sort -T $(BIGTMP_DIR) 
 
 ifdef TAXON_ID
@@ -68,6 +72,10 @@ $(DIRECT_GD_PREFIX)/all-$(REF_SOURCE)-gene-mesh.txt:	\
 $(DIRECT_GD_PREFIX)/all-mesh-refs.txt:	\
 		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt
 	cat $< | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp && \
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-parentunion-mesh-refs.txt:	
+	cat $(PM_MESH_PARENTUNION_PREFIX)/*.mesh-parentunion.txt | cut -d "|" -f 2 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp && \
 	mv $@.tmp $@
 
 # Count only gene-referenced pmids for each MeSH term for $(TAXON_NAME)
@@ -141,12 +149,12 @@ $(DIRECT_GD_PREFIX)/disease-mesh-refs.txt: \
 	mv $@.tmp $@ ; rm $@.tmp1
 
 # Count only brain disease-referencing pmids for each MeSH term
-$(DIRECT_GD_PREFIX)/braindisease-mesh-refs.txt: \
+$(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)-mesh-refs.txt: \
 		$(PM_MESH_PARENT_PREFIX)/mesh-parent.txt \
 		$(DIRECT_GD_PREDICT)/filter_file.py \
-		$(DIRECT_GD_PREFIX)/mesh-braindisease.txt
-	cat $(PM_MESH_PARENT_PREFIX)/mesh-parent.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/mesh-braindisease.txt | cut -d "|" -f 2 | uniq > $@.tmp1 && \
-	cat $@.tmp1 | wc --lines > $(DIRECT_GD_PREFIX)/braindisease-mesh-count.txt && \
+		$(DIRECT_GD_PREFIX)/mesh-$(MESH_SUBCAT).txt
+	cat $(PM_MESH_PARENT_PREFIX)/mesh-parent.txt | python $(DIRECT_GD_PREDICT)/filter_file.py $(DIRECT_GD_PREFIX)/mesh-$(MESH_SUBCAT).txt | cut -d "|" -f 2 | uniq > $@.tmp1 && \
+	cat $@.tmp1 | wc --lines > $(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)-mesh-count.txt && \
 	cat $< | python $(DIRECT_GD_PREDICT)/filter_file.py --field 1 $@.tmp1 | cut -d "|" -f 1 | $(BIGSORT) | $(UNIQ_COUNT) > $@.tmp && \
 	mv $@.tmp $@ ; rm $@.tmp1
 
@@ -155,8 +163,8 @@ $(DIRECT_GD_PREFIX)/disease-mesh-count.txt: \
 		$(DIRECT_GD_PREFIX)/disease-mesh-refs.txt
 
 # Total number of (unique) pmids referenced by brain disease MeSH
-$(DIRECT_GD_PREFIX)/braindisease-mesh-count.txt: \
-		$(DIRECT_GD_PREFIX)/braindisease-mesh-refs.txt
+$(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)-mesh-count.txt: \
+		$(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)-mesh-refs.txt
 
 # MeSH terms associated with Disease MeSH terms
 $(DIRECT_GD_PREFIX)/disease-comesh-total.txt: \
@@ -166,10 +174,10 @@ $(DIRECT_GD_PREFIX)/disease-comesh-total.txt: \
 	mv $@.tmp $@
 
 # MeSH terms associated with Brain Disease MeSH terms
-$(DIRECT_GD_PREFIX)/braindisease-comesh-total.txt: \
+$(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)-comesh-total.txt: \
 		$(PM_COMESH_PREFIX)/comesh-total.txt \
-		$(DIRECT_GD_PREFIX)/mesh-braindisease.txt
-	cat $(PM_COMESH_PREFIX)/comesh-total.txt | python $(DIRECT_GD_PREDICT)/filter_file.py --field 1 $(DIRECT_GD_PREFIX)/mesh-braindisease.txt > $@.tmp && \
+		$(DIRECT_GD_PREFIX)/mesh-$(MESH_SUBCAT).txt
+	cat $(PM_COMESH_PREFIX)/comesh-total.txt | python $(DIRECT_GD_PREDICT)/filter_file.py --field 1 $(DIRECT_GD_PREFIX)/mesh-$(MESH_SUBCAT).txt > $@.tmp && \
 	mv $@.tmp $@
 
 # Disease MeSHOPs using Disease PubMed as background
@@ -197,35 +205,35 @@ $(DIRECT_GD_PREFIX)/diseaseBG-disease-comesh-p.txt:	\
 	$(MAKE) -f $@.mk start
 
 # Brain Disease MeSHOPs using brain disease pubmed as background 
-$(DIRECT_GD_PREFIX)/braindiseaseBG-disease-comesh-p.txt:	\
-		$(DIRECT_GD_PREFIX)/braindisease-mesh-count.txt \
-		$(DIRECT_GD_PREFIX)/braindisease-comesh-total.txt \
+$(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)BG-disease-comesh-p.txt:	\
+		$(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)-mesh-count.txt \
+		$(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)-comesh-total.txt \
 		$(DIRECT_GD_PREDICT)/get_pval.R \
 		$(DIRECT_GD_PREDICT)/get_pval.mk \
 		$(DIRECT_GD_PREDICT)/merge_coc.py \
 		$(DIRECT_GD_PREDICT)/filter_file.py \
 		$(DIRECT_GD_PREFIX)/all-mesh-refs.txt \
-		$(DIRECT_GD_PREFIX)/braindisease-mesh-refs.txt \
+		$(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)-mesh-refs.txt \
 		$(SQL_PREFIX)/load-titles.txt \
-		$(DIRECT_GD_PREFIX)/mesh-braindisease.txt
-	echo PROFILE_INPUT_DATA=$(DIRECT_GD_PREFIX)/braindisease-comesh-total.txt > $@.mk && \
-	echo PROFILE_OUTPUT_FILE=$(DIRECT_GD_PREFIX)/braindiseaseBG-disease-comesh-p.txt >> $@.mk && \
-	echo PROFILE_PHYPER_TOTAL=`cat $(DIRECT_GD_PREFIX)/braindisease-mesh-count.txt` >> $@.mk && \
+		$(DIRECT_GD_PREFIX)/mesh-$(MESH_SUBCAT).txt
+	echo PROFILE_INPUT_DATA=$(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)-comesh-total.txt > $@.mk && \
+	echo PROFILE_OUTPUT_FILE=$(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)BG-disease-comesh-p.txt >> $@.mk && \
+	echo PROFILE_PHYPER_TOTAL=`cat $(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)-mesh-count.txt` >> $@.mk && \
 	echo PROFILE_GETP=$(DIRECT_GD_PREDICT)/get_pval.R >> $@.mk && \
 	echo PROFILE_MERGE_COC=$(DIRECT_GD_PREDICT)/merge_coc.py >> $@.mk && \
 	echo PROFILE_MERGE_COC_FILE1=$(DIRECT_GD_PREFIX)/all-mesh-refs.txt >> $@.mk && \
-	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/braindisease-mesh-refs.txt >> $@.mk && \
+	echo PROFILE_MERGE_COC_FILE2=$(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)-mesh-refs.txt >> $@.mk && \
 	echo PROFILE_REVERSED_INPUT=-r >> $@.mk && \
 	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
-	echo include $(DIRECT_GD_PREDICT)/get_pval.mk  >> $@.mk &&
+	echo include $(DIRECT_GD_PREDICT)/get_pval.mk  >> $@.mk && \
 	$(MAKE) -f $@.mk start
 
 # Leaf term Filtered Brain Disease (Brain Disease background) MeSHOPs
-$(DIRECT_GD_PREFIX)/nr-braindiseaseBG-disease-comesh-p.txt: \
-		$(DIRECT_GD_PREFIX)/braindiseaseBG-disease-comesh-p.txt \
+$(DIRECT_GD_PREFIX)/nr-$(MESH_SUBCAT)BG-disease-comesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)BG-disease-comesh-p.txt \
 		$(MESH_PREFIX)/mesh-child.txt \
 		$(UTIL)/filter-leaf.py
-	cat $(DIRECT_GD_PREFIX)/braindiseaseBG-disease-comesh-p.txt | python $(UTIL)/filter-leaf.py $(MESH_PREFIX)/mesh-child.txt > $@.tmp && \
+	cat $(DIRECT_GD_PREFIX)/$(MESH_SUBCAT)BG-disease-comesh-p.txt | python $(UTIL)/filter-leaf.py $(MESH_PREFIX)/mesh-child.txt > $@.tmp && \
 	mv $@.tmp $@
 
 # Leaf term filtered Gene MeSHOPs
@@ -331,6 +339,11 @@ $(DIRECT_GD_PREFIX)/mesh-disease.txt:	$(SQL_PREFIX)/load-mesh-tree.txt
 	echo "SELECT term from mesh_tree WHERE tree_num LIKE 'C%'" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp && \
 	mv $@.tmp $@
 
+# All terms in Category C (Disease)
+$(DIRECT_GD_PREFIX)/mesh-psychdisease.txt:	$(SQL_PREFIX)/load-mesh-tree.txt
+	echo "SELECT term from mesh_tree WHERE tree_num LIKE 'F03.%'" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp && \
+	mv $@.tmp $@
+
 # All terms including/under the MeSH term for Brain Diseases
 $(DIRECT_GD_PREFIX)/mesh-braindisease.txt:	$(SQL_PREFIX)/load-mesh-tree.txt
 	echo "SELECT term from mesh_tree WHERE tree_num LIKE 'C10.228.140.%'" | $(SQL_CMD) | tail -n +2 | sort | uniq > $@.tmp && \
@@ -430,19 +443,35 @@ $(DIRECT_GD_PREFIX)/chemBG-chem-mesh-p.txt: \
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.mk && \
 	$(MAKE) -f $@.mk start
 
+# Leaf term filtered chem MeSHOPs
+$(DIRECT_GD_PREFIX)/nr-all-chem-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/all-chem-mesh-p.txt \
+		$(MESH_PREFIX)/mesh-child.txt \
+		$(UTIL)/filter-leaf.py
+	cat $< | python $(UTIL)/filter-leaf.py $(MESH_PREFIX)/mesh-child.txt > $@.tmp && \
+	mv $@.tmp $@ 
+
+
+$(DIRECT_GD_PREFIX)/nr-chemBG-chem-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/chemBG-chem-mesh-p.txt \
+		$(MESH_PREFIX)/mesh-child.txt \
+		$(UTIL)/filter-leaf.py
+	cat $< | python $(UTIL)/filter-leaf.py $(MESH_PREFIX)/mesh-child.txt > $@.tmp && \
+	mv $@.tmp $@ 
+
 # Author MeSH term counts - lastname, firstnamme (initials)
 # Normalising the author name into a single field?
 $(DIRECT_GD_PREFIX)/all-author-mesh.txt:	\
 		$(SQL_PREFIX)/load-mesh-parent.txt \
 		$(SQL_PREFIX)/load-author.txt
-	echo "select UPPER(CONCAT(lastname, ', ', forename, ' (', initials, ')')) AS name, mesh_parent from pubmed_author, pubmed_mesh_parent WHERE pubmed_author.pmid=pubmed_mesh_parent.pmid" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
+	echo "select UPPER(CONCAT(lastname, ', ', forename, ' (', initials, ')')) AS name, mesh_parent from pubmed_author, pubmed_mesh_parent WHERE pubmed_author.pmid=pubmed_mesh_parent.pmid" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 -k 2,2 | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
 	mv $@.tmp $@
 
 # Abbrev Author MeSH term counts - lastname, initials
 $(DIRECT_GD_PREFIX)/all-short-author-mesh.txt:	\
 		$(SQL_PREFIX)/load-mesh-parent.txt \
 		$(SQL_PREFIX)/load-author.txt
-	echo "select UPPER(CONCAT(lastname, ', ', initials)) AS name, mesh_parent from pubmed_author, pubmed_mesh_parent WHERE pubmed_author.pmid=pubmed_mesh_parent.pmid" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 | uniq | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
+	echo "select UPPER(CONCAT(lastname, ', ', initials)) AS name, mesh_parent from pubmed_author, pubmed_mesh_parent WHERE pubmed_author.pmid=pubmed_mesh_parent.pmid" | $(SQL_CMD) | tail -n +2 | sed "y/\t/\|/" | $(BIGSORT) -t "|" -k 1,1 -k 2,2 | cut -d "|" -f 1,2 | $(UNIQ_COUNT) > $@.tmp && \
 	mv $@.tmp $@
 
 # Author referenced article counts
@@ -474,6 +503,25 @@ $(DIRECT_GD_PREFIX)/all-author-min20-max1000-mesh-p.txt: \
 $(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p.txt: \
 		$(DIRECT_GD_PREFIX)/all-author-mesh-p.txt
 	cat $< | awk -F '|' '$$4 > 15 && $$4 < 1000' > $@.tmp && \
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p-occurrence.txt: \
+		 $(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p.txt
+	cat $< | python $(DIRECT_GD_PREDICT)/get-occurrence.py > $@.tmp && \
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p-avg-tier4.txt: \
+		$(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p-occurrence.txt \
+		$(MESH_PREFIX)/mesh-tier4.txt \
+		$(DIRECT_GD_PREDICT)/filter_file.py
+	cat $< | python $(DIRECT_GD_PREDICT)/filter_file.py $(MESH_PREFIX)/mesh-tier4.txt | cut -f 1,5 -d '|' | sort -k 2 -t '|' | head -n 1000 > $@.tmp && \
+	mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-author-min15-max1000-hash-avg-tier4-1000.txt: \
+		$(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p.txt \
+		$(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p-avg-tier4.txt \
+		$(DIRECT_GD_PREDICT)/hash-profile.py
+	cat $< | python $(DIRECT_GD_PREDICT)/hash-profile.py $(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p-avg-tier4.txt > $@.tmp && \
 	mv $@.tmp $@
 
 $(DIRECT_GD_PREFIX)/all-author-mesh-p.txt: \
@@ -518,6 +566,46 @@ $(DIRECT_GD_PREFIX)/all-short-author-mesh-p.txt: \
 	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(DIRECT_GD_PREDICT)/get_pval.mk >> $@.mk && \
 	$(MAKE) -f $@.mk start
+
+$(DIRECT_GD_PREFIX)/all-author-top$(AUTHOR_TOP_MESH)-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/all-author-mesh-p.txt \
+		$(DIRECT_GD_PREDICT)/filter_mesh.py
+	cat $< | python $(DIRECT_GD_PREDICT)/filter_mesh.py $(AUTHOR_TOP_MESH) > $@.tmp && mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-author-top$(AUTHOR_TOP_MESH)-mesh-count.txt: \
+		$(DIRECT_GD_PREFIX)/all-author-top$(AUTHOR_TOP_MESH)-mesh-p.txt
+	cut -f 2 -d '|' $< | sort -k 2 -t '|' | $(UNIQ_COUNT) |  sort -n -k 2 -r -t '|' > $@.tmp && mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-author-min15-max1000-top$(AUTHOR_TOP_MESH)-mesh-p.txt: \
+		$(DIRECT_GD_PREFIX)/all-author-min15-max1000-mesh-p.txt \
+		$(DIRECT_GD_PREDICT)/filter_mesh.py
+	cat $< | python $(DIRECT_GD_PREDICT)/filter_mesh.py $(AUTHOR_TOP_MESH) > $@.tmp && mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/all-author-min15-max1000-top$(AUTHOR_TOP_MESH)-mesh-count.txt: \
+		$(DIRECT_GD_PREFIX)/all-author-min15-max1000-top$(AUTHOR_TOP_MESH)-mesh-p.txt
+	cut -f 2 -d '|' $< | sort -k 2 -t '|' | $(UNIQ_COUNT) |  sort -n -k 2 -r -t '|' > $@.tmp && mv $@.tmp $@
+
+$(DIRECT_GD_PREFIX)/author_mesh$(AUTHOR_TOP_MESH).sql:
+	echo "CREATE TABLE IF NOT EXISTS author_mesh$(AUTHOR_TOP_MESH)" > $@.tmp && \
+	echo "(" >> $@.tmp && \
+	echo "author VARCHAR(256)," >> $@.tmp && \
+	echo "term VARCHAR(256)," >> $@.tmp && \
+	echo "PRIMARY KEY (author, term)," >> $@.tmp && \
+	echo "INDEX(term, author)" >> $@.tmp && \
+	echo ");" >> $@.tmp && \
+	mv $@.tmp $@
+
+
+
+$(SQL_PREFIX)/load-author-mesh$(AUTHOR_TOP_MESH).txt: \
+		$(DIRECT_GD_PREFIX)/all-author-top$(AUTHOR_TOP_MESH)-mesh-p.txt \
+		$(DIRECT_GD_PREFIX)/author_mesh$(AUTHOR_TOP_MESH).sql 
+	echo "DROP TABLE IF EXISTS author_mesh$(AUTHOR_TOP_MESH)" | $(SQL_CMD) && \
+	cat $(DIRECT_GD_PREFIX)/author_mesh$(AUTHOR_TOP_MESH).sql | $(SQL_CMD) && \
+	echo "LOAD DATA LOCAL INFILE '$<' INTO TABLE author_mesh$(AUTHOR_TOP_MESH) FIELDS TERMINATED by '|'" | $(SQL_CMD) && \
+	echo "SELECT COUNT(*) FROM author_mesh$(AUTHOR_TOP_MESH)" | $(SQL_CMD) > $@
+
+
 
 # Limit extraction to only compounds in the pharmacologic action list
 $(DIRECT_GD_PREFIX)/pharma-chem.txt: \

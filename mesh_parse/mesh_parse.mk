@@ -39,6 +39,14 @@ $(MESH_PREFIX)/mesh-child.txt:	$(SQL_PREFIX)/load-mesh-tree.txt $(MESH_PARSE)/me
 	echo "SELECT * FROM mesh_child" | $(SQL_CMD) | sed "y/\t/\|/" > $@.tmp && \
 	mv -f $@.tmp $@
 
+$(MESH_PREFIX)/mesh-directchild.txt:	$(SQL_PREFIX)/load-mesh-tree.txt $(MESH_PARSE)/mesh_directchild.sql
+	cat $(MESH_PARSE)/mesh_directchild.sql | $(SQL_CMD) && \
+	echo "SELECT * FROM mesh_directchild" | $(SQL_CMD) | sed "y/\t/\|/" > $@.tmp && \
+	mv -f $@.tmp $@
+
+$(MESH_PREFIX)/mesh-parentunion-directchild.txt: $(MESH_PREFIX)/mesh-directchild.txt $(MESH_PREFIX)/mesh-child.txt
+	cat  $(MESH_PREFIX)/mesh-directchild.txt $(MESH_PREFIX)/mesh-child.txt | sort | uniq > $@.tmp && mv $@.tmp $@
+
 $(MESH_PREFIX)/mesh_syn.txt:	$(MESH_PARSE)/mesh_syn.xsl 
 	zcat $(MESH_DESC_XML) | xsltproc --novalid $< - > $@.tmp && \
 	mv -f $@.tmp $@
@@ -54,6 +62,10 @@ $(MESH_PREFIX)/meshsupp_pharma.txt:	$(MESH_PARSE)/meshsupp_pharma.xsl
 $(MESH_PREFIX)/meshsupp_cas.txt:	$(MESH_PARSE)/meshsupp_cas.xsl 
 	zcat $(MESH_SUPP_DESC_XML) | xsltproc --novalid $< - > $@.tmp && \
 	mv -f $@.tmp $@
+
+$(MESH_PREFIX)/mesh-tier4.txt:	 $(SQL_PREFIX)/load-mesh-tree.txt
+	echo "SELECT term FROM mesh_tree WHERE tree_num LIKE '%.%.%.%' AND tree_num NOT LIKE '%.%.%.%.%'" | $(SQL_CMD) | tail -n +2 > $@.tmp && \
+	mv $@.tmp $@
 
 mesh_parse_clean:
 	rm -f $(MESH_PREFIX)/mesh_ids.txt $(MESH_PREFIX)/mesh_tree.txt

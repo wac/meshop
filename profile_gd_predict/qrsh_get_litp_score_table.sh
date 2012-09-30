@@ -20,7 +20,7 @@ then
     echo done
     exit
 fi
-echo Not Found -- $TXTDIR/disease-pharma-chem-litp-profiles.txt
+echo Not Found -- $TXTDIR/disease-pharma-chem-litp-score$SCORE-profiles.txt
 
 if [ ! -f $TXTDIR/disease-pharma-chem-profiles-score3,4,$SCORE.txt ]
 then

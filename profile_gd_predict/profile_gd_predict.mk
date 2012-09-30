@@ -26,6 +26,7 @@ DISEASE_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/disease-profile
 DCHEM_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/dchem-profile
 DPCHEM_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/dpchem-profile
 AUTHOR_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/auth-profile
+AUTHOR_HASH_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/auth-hash-profile
 PHARMREF_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/pharm-$(REF_SOURCE)-profile
 PHARMA_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/pharma-profile
 ACOMESH_PROFILE_PREFIX=$(PROFILE_GD_PREFIX)/acomesh-profile
@@ -163,6 +164,23 @@ $(PROFILE_GD_PREFIX)/author-author-profiles.txt: \
 	echo SPLIT_PREFIX=$(AUTHOR_PROFILE_PREFIX)/all-author-profile- >>$@.mk  && \
 	echo SPLIT_SUFFIX=txt  >>$@.mk  && \
 	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-profile.py  >>$@.mk && \
+	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
+	echo include $(PROFILE_GD_PREDICT)/cmp-profile.mk >> $@.mk && \
+	$(MAKE) -f $@.mk start
+
+# Author-author Hashes
+$(PROFILE_GD_PREFIX)/author-author-hash-profiles.txt: \
+		$(DIRECT_GD_PREFIX)/all-author-min15-max1000-hash-avg-tier4-1000.txt \
+		$(PROFILE_GD_PREDICT)/cmp-hash-profile.py \
+		$(PROFILE_GD_PREDICT)/cmp-profile.mk \
+		$(PROFILE_GD_PREDICT)/basic-split.py
+	echo PROFILE1_DATA=$(DIRECT_GD_PREFIX)/all-author-min15-max1000-hash-avg-tier4-1000.txt > $@.mk && \
+	echo PROFILE2_DATA=$(DIRECT_GD_PREFIX)/all-author-min15-max1000-hash-avg-tier4-1000.txt >> $@.mk && \
+	echo PROFILE1_SPLIT_PY=$(PROFILE_GD_PREDICT)/basic-split.py >> $@.mk && \
+	echo OUTPUT_FILE=$@ >>$@.mk && \
+	echo SPLIT_PREFIX=$(AUTHOR_HASH_PROFILE_PREFIX)/all-author-hash-profile- >>$@.mk  && \
+	echo SPLIT_SUFFIX=txt  >>$@.mk  && \
+	echo CMP_PROFILE_PY=$(PROFILE_GD_PREDICT)/cmp-hash-profile.py  >>$@.mk && \
 	echo SELF_MAKEFILE=$@.mk >> $@.mk && \
 	echo include $(PROFILE_GD_PREDICT)/cmp-profile.mk >> $@.mk && \
 	$(MAKE) -f $@.mk start
