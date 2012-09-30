@@ -29,6 +29,11 @@ for line in f:
 
 dcs_p = {}
 dcs_count = {}
+
+dcs_p2 = {}
+dcs_count2 = {}
+
+
 f=open(sys.argv[2])
 for line in f:
     if len(line) and line[0]=='#':
@@ -36,8 +41,10 @@ for line in f:
     t=line.strip().split(sep)
     dcs_p[(int(t[0]),int(t[1]),int(t[2]))]=float(t[4])
     dcs_count[(int(t[0]),int(t[1]),int(t[2]))]=float(t[3])
+    dcs_p2[(int(t[0]),int(t[1]),int(t[2]))]=float(t[6])
+    dcs_count2[(int(t[0]),int(t[1]),int(t[2]))]=float(t[5])
 
-print '# disease|chem|score|litp|disease_chem_score_p|score_given_litp'
+print '# disease|chem|score|litp|disease_chem_score_p|score_given_litp|'
 
 def minlookup(hash_p, hash_pcuts, name, val):
     p_int=0
@@ -66,4 +73,8 @@ for line in sys.stdin:
     litp= ( (101-dp) * (101-cp) / 10000.0)
     i=dcs_p[(dp,cp,sp)]
     j=dcs_count[(dp,cp,sp)]
-    print t[0]+sep+t[1]+sep+t[4]+sep+str(sp)+sep+str(litp)+sep+str(i)+sep+str(j)+sep+str(i/litp)
+
+    i2=dcs_p2[(dp,cp,sp)]
+    j2=dcs_count2[(dp,cp,sp)]
+    print t[0]+sep+t[1]+sep+t[4]+sep+str(sp)+sep+str(litp)+sep+str(i)+sep+str(j)+sep+str(i/litp)+sep+str(i2)+sep+str(j2)+sep+str(i2/litp)
+
